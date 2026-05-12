@@ -1,0 +1,73 @@
+Objectives
+Ascii-art-web consists in creating and running a server, in which it will be possible to use a web GUI (graphical user interface) version of your last project, ascii-art.
+
+Your webpage must allow the use of the different banners:
+
+shadow
+
+standard
+
+thinkertoy
+
+Implement the following HTTP endpoints:
+
+GET /: Sends HTML response, the main page.
+1.1. GET Tip: go templates to receive and display data from the server.
+
+POST /ascii-art: that sends data (text and specified banner) to the Go server.
+2.1. POST Tip: use form and other types of tags to make the post request.
+
+The way you display the result from the POST is up to you. What we recommend are one of the following :
+
+Display the result in the route /ascii-art after the POST is completed. So going from the home page to another page.
+
+Or display the result of the POST in the home page. This way appending the results in the home page.
+
+The main page must have:
+
+a text input field
+
+radio buttons, select object or another method to switch between banners
+
+a button that sends a POST request to '/ascii-art' and displays the result on the page.
+
+Implementation notes for this repository:
+
+- The home page also serves a linked stylesheet from GET /styles.css.
+- Form-related errors are returned with user-friendly explanations inside the rendered HTML page.
+- Missing routes, templates, stylesheets, and banner resources return specific HTTP error messages instead of vague generic responses.
+- Standalone HTTP error pages display the numeric status code and uppercase status title in a centered layout.
+- The main form supports keyboard submission with Enter and keeps multiline entry available through Shift+Enter.
+- Successful results expose browser-side actions for copy, image export, and share, with graceful fallback if a browser lacks support.
+
+HTTP status code
+Your endpoints must return appropriate HTTP status codes.
+
+200 OK, if everything went without errors.
+
+404 Not Found, if nothing is found, for example templates or banners.
+
+400 Bad Request, for incorrect requests.
+
+500 Internal Server Error, for unhandled errors.
+
+In the root project directory create a README.MD file with the following sections and contents:
+
+Description
+
+Authors
+
+Usage: how to run
+
+Implementation details: algorithm
+
+Instructions
+HTTP server must be written in Go.
+
+HTML templates must be in the project root directory templates.
+
+The code must respect the good practices.
+
+Allowed packages
+Only the standard go packages are allowed
+

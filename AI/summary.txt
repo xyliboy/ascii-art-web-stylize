@@ -1,0 +1,31 @@
+date: 2026-04-20
+prompt-by: ebimai
+summary: You asked me to inspect the new ascii-art-web repository, read the project requirements, and start the project correctly from the beginning with a new AGENTS file, PRD, docs, and an updated running summary log.
+---
+date: 2026-04-20
+prompt-by: ebimai
+summary: You asked me to create a practical task-ownership document and an initial folder skeleton so the two developers can split work clearly before implementation begins.
+---
+date: 2026-04-20
+prompt-by: ebimai
+summary: You asked me to create a handoff document with a ready-to-use prompt so another developer can brief a different agent on the current project state before implementation begins.
+---
+date: 2026-04-26
+prompt-by: ebimai
+summary: You asked me to switch into the ascii-art-web repository, review Developer B's owned HTTP and template work against AGENTS and task ownership, confirm whether it was solid, then implement Developer A's banner-loading and rendering layer, wire the project to run end-to-end, align README and PRD with the implemented behavior, and keep this running summary updated.
+---
+date: 2026-04-26
+prompt-by: ebimai
+summary: You asked me to improve the web experience with CSS, replace vague HTTP error responses with detailed user-friendly explanations, create a friendly audit.md guide with direct audit commands, and keep the repository documentation and running summary aligned while preserving the project structure.
+---
+date: 2026-04-26
+prompt-by: ebimai
+summary: You asked me to refine the UX further by turning 400/404/500 responses into centered standalone error pages with visible status codes, printing a plain clickable startup URL in the terminal, supporting keyboard form submission with Enter while keeping Shift+Enter for multiline text, and documenting these behavior changes in the project files.
+---
+date: 2026-04-26
+prompt-by: ebimai
+summary: You asked me to add browser-side result actions for copying the ASCII output, exporting it as an image, and sharing it, while keeping the implementation inside the front-end/template layer with graceful fallback behavior and keeping the project documentation aligned.
+---
+date: 2026-04-26
+prompt-by: ebimai
+summary: You asked me to do a final repository review before the last commit and push, identify unused scaffold leftovers such as the empty internal/app area, decide which text files still belong in the project contract or audit flow, and clean up only the files that no longer serve the implemented architecture.

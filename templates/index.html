@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASCII Art Web</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero">
+      <p class="eyebrow">Go Web Renderer</p>
+      <h1>ASCII Art Web</h1>
+      <p class="intro">Generate banner-based ASCII art directly from the browser using the supported templates.</p>
+    </section>
+
+    <section class="panel">
+      <form action="/ascii-art" method="post" class="art-form">
+        <label for="text">Text</label>
+        <textarea id="text" name="text" rows="8" cols="60" placeholder="Type your text here...">{{.Text}}</textarea>
+        <p class="field-hint">Press Enter to generate. Use Shift+Enter when you want a new line inside the text box.</p>
+
+        {{if .Error}}
+        <section class="message message-error" aria-live="polite">
+          <h2>Request Error</h2>
+          <p>{{.Error}}</p>
+        </section>
+        {{end}}
+
+        {{if .Result}}
+        <section class="message message-success">
+          <h2>Rendered Output</h2>
+          <div class="result-actions" aria-label="Result actions">
+            <button type="button" class="secondary-button" data-action="copy-result">Copy Output</button>
+            <button type="button" class="secondary-button" data-action="save-image">Save As Image</button>
+            <button type="button" class="secondary-button" data-action="share-result">Share Result</button>
+          </div>
+          <p class="action-feedback" data-action-feedback aria-live="polite"></p>
+          <pre>{{.Result}}</pre>
+        </section>
+        {{end}}
+
+        {{if and (not .Result) (not .Error)}}
+        <section class="message message-info">
+          <h2>Ready</h2>
+          <p>Choose a banner, submit the form, and the generated ASCII art will appear here.</p>
+        </section>
+        {{end}}
+
+        <fieldset>
+          <legend>Banner</legend>
+
+          <label>
+            <input type="radio" name="banner" value="standard" {{if eq .Banner "standard"}}checked{{end}}>
+            standard
+          </label>
+
+          <label>
+            <input type="radio" name="banner" value="shadow" {{if eq .Banner "shadow"}}checked{{end}}>
+            shadow
+          </label>
+
+          <label>
+            <input type="radio" name="banner" value="thinkertoy" {{if eq .Banner "thinkertoy"}}checked{{end}}>
+            thinkertoy
+          </label>
+        </fieldset>
+
+        <button type="submit">Generate ASCII Art</button>
+      </form>
+    </section>
+  </main>
+  <script>
+    (function () {
+      const form = document.querySelector(".art-form");
+      const textArea = document.getElementById("text");
+      const resultElement = document.querySelector(".message-success pre");
+      const feedbackElement = document.querySelector("[data-action-feedback]");
+      const copyButton = document.querySelector('[data-action="copy-result"]');
+      const saveButton = document.querySelector('[data-action="save-image"]');
+      const shareButton = document.querySelector('[data-action="share-result"]');
+
+      if (!form || !textArea) {
+        return;
+      }
+
+      function setFeedback(message) {
+        if (feedbackElement) {
+          feedbackElement.textContent = message;
+        }
+      }
+
+      async function copyResult() {
+        if (!resultElement || !navigator.clipboard) {
+          setFeedback("Copy is not available in this browser.");
+          return;
+        }
+
+        await navigator.clipboard.writeText(resultElement.textContent);
+        setFeedback("ASCII output copied to the clipboard.");
+      }
+
+      function saveResultAsImage() {
+        if (!resultElement) {
+          setFeedback("There is no ASCII output to export.");
+          return;
+        }
+
+        const asciiText = resultElement.textContent || "";
+        const lines = asciiText.split("\n");
+        const fontSize = 16;
+        const lineHeight = 20;
+        const padding = 28;
+        const longestLine = lines.reduce(function (max, line) {
+          return Math.max(max, line.length);
+        }, 0);
+
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        if (!context) {
+          setFeedback("Image export is not available in this browser.");
+          return;
+        }
+
+        context.font = fontSize + 'px "Courier New", monospace';
+        const textWidth = Math.ceil(context.measureText("M").width * Math.max(longestLine, 1));
+        canvas.width = textWidth + padding * 2;
+        canvas.height = Math.max(lines.length, 1) * lineHeight + padding * 2;
+
+        context.fillStyle = "#fffaf2";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.fillStyle = "#1f1a17";
+        context.font = fontSize + 'px "Courier New", monospace';
+        context.textBaseline = "top";
+
+        lines.forEach(function (line, index) {
+          context.fillText(line, padding, padding + index * lineHeight);
+        });
+
+        const link = document.createElement("a");
+        link.href = canvas.toDataURL("image/png");
+        link.download = "ascii-art.png";
+        link.click();
+        setFeedback("ASCII output saved as ascii-art.png.");
+      }
+
+      async function shareResult() {
+        if (!resultElement) {
+          setFeedback("There is no ASCII output to share.");
+          return;
+        }
+
+        const shareText = resultElement.textContent || "";
+        if (navigator.share) {
+          await navigator.share({
+            title: "ASCII Art Web Output",
+            text: shareText
+          });
+          setFeedback("Share dialog opened.");
+          return;
+        }
+
+        if (navigator.clipboard) {
+          await navigator.clipboard.writeText(shareText);
+          setFeedback("Native share is not available, so the output was copied instead.");
+          return;
+        }
+
+        setFeedback("Share is not available in this browser.");
+      }
+
+      textArea.addEventListener("keydown", function (event) {
+        if (event.key !== "Enter" || event.shiftKey) {
+          return;
+        }
+
+        event.preventDefault();
+        if (typeof form.requestSubmit === "function") {
+          form.requestSubmit();
+          return;
+        }
+
+        form.submit();
+      });
+
+      if (copyButton) {
+        copyButton.addEventListener("click", function () {
+          copyResult().catch(function () {
+            setFeedback("Copy failed. Please try again.");
+          });
+        });
+      }
+
+      if (saveButton) {
+        saveButton.addEventListener("click", function () {
+          saveResultAsImage();
+        });
+      }
+
+      if (shareButton) {
+        shareButton.addEventListener("click", function () {
+          shareResult().catch(function () {
+            setFeedback("Share failed. Please try again.");
+          });
+        });
+      }
+    }());
+  </script>
+</body>
+</html>
