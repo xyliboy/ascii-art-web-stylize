@@ -12,6 +12,8 @@ Build a Go HTTP server that provides a web GUI for the previous ASCII-art projec
 - Support `standard`, `shadow`, and `thinkertoy`
 - Return correct HTTP status codes
 - Use Go HTML templates from the root `templates/` directory
+- Provide a more polished, modern, and user-friendly interface than the base web version
+- Include CSS-driven styling and interaction feedback
 
 ### Out of scope
 - Building a JavaScript-heavy frontend
@@ -74,6 +76,8 @@ Build a Go HTTP server that provides a web GUI for the previous ASCII-art projec
 - Presents user-facing error feedback inside the page for form-related failures.
 - Presents standalone styled error pages for route-level or transport-level failures such as `404 Not Found`.
 - Provides browser-side result actions such as copy, save-as-image, and share without changing the server API contract.
+- Must keep text readable and visually distinct regardless of background and accent colors.
+- Must remain responsive and consistent across screen sizes.
 
 ## 8. Testing Strategy
 
@@ -95,4 +99,5 @@ Build a Go HTTP server that provides a web GUI for the previous ASCII-art projec
 - `POST /ascii-art` renders submitted text with the selected banner.
 - Status codes match the subject requirements.
 - Templates live under `templates/`.
+- The page is visually improved, responsive, and provides clearer feedback than the base web version.
 - `gofmt`, `go vet`, and `go test` all pass.

@@ -29,3 +29,15 @@ summary: You asked me to add browser-side result actions for copying the ASCII o
 date: 2026-04-26
 prompt-by: ebimai
 summary: You asked me to do a final repository review before the last commit and push, identify unused scaffold leftovers such as the empty internal/app area, decide which text files still belong in the project contract or audit flow, and clean up only the files that no longer serve the implemented architecture.
+---
+date: 2026-05-14
+prompt-by: ebimai
+summary: You asked me to inspect the full ascii-art-web-stylize repository, read the new stylize objective in projectinfo.txt, and continue as a senior coding mentor who explains decisions clearly and reviews the project critically from an architecture and UX perspective.
+---
+date: 2026-05-14
+prompt-by: ebimai
+summary: You asked me not just to list improvements but to execute the stylize objective itself, so I upgraded the main template and stylesheet to make the UI more modern, responsive, and feedback-rich, and I synchronized the README, PRD, and AGENTS files with the new stylize-focused contract while keeping the HTTP behavior intact.
+---
+date: 2026-05-14
+prompt-by: ebimai
+summary: You asked for a second UI refinement pass to fix action-button geometry, remove the “like a real product page” headline wording, and prevent very large ASCII outputs from breaking the layout, so I tightened the action labels, adjusted button styling, changed the headline, capped the result area with scrolling, and kept the input panel stable on large screens.

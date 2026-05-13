@@ -48,6 +48,13 @@ This document defines the repository-specific development rules for `ascii-art-w
 - `404 Not Found` for missing routes, templates, or banner files
 - `500 Internal Server Error` for unexpected server-side failures
 
+### 2.4 Stylize Objective
+- The web experience must be more appealing, interactive, intuitive, and user friendly than the base `ascii-art-web` project.
+- CSS is required and must be treated as part of the functional deliverable, not as optional decoration.
+- The interface must stay readable even when colors and visual accents are introduced.
+- The layout must stay responsive and visually consistent across desktop and mobile sizes.
+- The user should receive clearer feedback before, during, and after form interactions.
+
 ## 3. Architecture Expectations
 
 ### 3.1 HTTP Layer
@@ -76,6 +83,7 @@ This document defines the repository-specific development rules for `ascii-art-w
 - Validate invalid banner handling
 - Validate empty input handling
 - Validate missing routes/templates/banners with proper HTTP status codes
+- Validate stylized UI elements without breaking the underlying HTTP contract
 
 ## 5. Tooling and Verification
 

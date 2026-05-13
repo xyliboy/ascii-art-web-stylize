@@ -3,71 +3,130 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ASCII Art Web</title>
+  <title>ASCII Art Web Stylize</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <main class="page-shell">
     <section class="hero">
-      <p class="eyebrow">Go Web Renderer</p>
-      <h1>ASCII Art Web</h1>
-      <p class="intro">Generate banner-based ASCII art directly from the browser using the supported templates.</p>
+      <div class="hero-copy">
+        <p class="eyebrow">Go Web Renderer</p>
+        <h1>Shape text into expressive ASCII banners</h1>
+        <p class="intro">Generate banner-based ASCII art from the browser with fast feedback, readable output, and a cleaner workflow for both desktop and mobile users.</p>
+      </div>
+      <aside class="hero-card" aria-label="Feature summary">
+        <h2>What this page gives you</h2>
+        <ul class="feature-list">
+          <li>Live-friendly form flow with keyboard shortcuts</li>
+          <li>Clear banner selection with visual emphasis</li>
+          <li>Copy, export, and share actions for generated results</li>
+          <li>Readable output area designed for monospace content</li>
+        </ul>
+      </aside>
     </section>
 
-    <section class="panel">
-      <form action="/ascii-art" method="post" class="art-form">
-        <label for="text">Text</label>
-        <textarea id="text" name="text" rows="8" cols="60" placeholder="Type your text here...">{{.Text}}</textarea>
-        <p class="field-hint">Press Enter to generate. Use Shift+Enter when you want a new line inside the text box.</p>
+    <section class="workspace">
+      <section class="panel panel-form">
+        <div class="panel-head">
+          <div>
+            <p class="panel-kicker">Input</p>
+            <h2>Create your ASCII art</h2>
+          </div>
+          <span class="badge">{{if .Banner}}{{.Banner}}{{else}}standard{{end}}</span>
+        </div>
+
+        <form action="/ascii-art" method="post" class="art-form">
+          <div class="field-group">
+            <div class="field-header">
+              <label for="text">Text</label>
+              <span class="field-meta"><span data-char-count>0</span> characters</span>
+            </div>
+            <textarea id="text" name="text" rows="8" cols="60" placeholder="Type your text here...">{{.Text}}</textarea>
+            <p class="field-hint">Press <strong>Enter</strong> to generate quickly. Use <strong>Shift+Enter</strong> when you want a new line inside the textbox.</p>
+          </div>
+
+          <fieldset class="banner-fieldset">
+            <legend>Choose a banner</legend>
+
+            <label class="banner-option">
+              <input type="radio" name="banner" value="standard" {{if eq .Banner "standard"}}checked{{end}}>
+              <span class="banner-option-body">
+                <strong>standard</strong>
+                <small>Clean and classic output</small>
+              </span>
+            </label>
+
+            <label class="banner-option">
+              <input type="radio" name="banner" value="shadow" {{if eq .Banner "shadow"}}checked{{end}}>
+              <span class="banner-option-body">
+                <strong>shadow</strong>
+                <small>Heavier look with stronger visual depth</small>
+              </span>
+            </label>
+
+            <label class="banner-option">
+              <input type="radio" name="banner" value="thinkertoy" {{if eq .Banner "thinkertoy"}}checked{{end}}>
+              <span class="banner-option-body">
+                <strong>thinkertoy</strong>
+                <small>Lightweight and playful style</small>
+              </span>
+            </label>
+          </fieldset>
+
+          <div class="form-actions">
+            <button type="submit">Generate ASCII Art</button>
+            <button type="button" class="secondary-button" data-action="clear-form">Clear Input</button>
+          </div>
+
+          <p class="form-feedback" data-form-feedback aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="panel panel-output">
+        <div class="panel-head">
+          <div>
+            <p class="panel-kicker">Output</p>
+            <h2>Result preview</h2>
+          </div>
+          <span class="status-pill {{if .Error}}status-pill-error{{else if .Result}}status-pill-success{{else}}status-pill-idle{{end}}">
+            {{if .Error}}Needs attention{{else if .Result}}Ready to use{{else}}Waiting for input{{end}}
+          </span>
+        </div>
 
         {{if .Error}}
         <section class="message message-error" aria-live="polite">
-          <h2>Request Error</h2>
+          <h3>Request Error</h3>
           <p>{{.Error}}</p>
         </section>
         {{end}}
 
         {{if .Result}}
         <section class="message message-success">
-          <h2>Rendered Output</h2>
-          <div class="result-actions" aria-label="Result actions">
-            <button type="button" class="secondary-button" data-action="copy-result">Copy Output</button>
-            <button type="button" class="secondary-button" data-action="save-image">Save As Image</button>
-            <button type="button" class="secondary-button" data-action="share-result">Share Result</button>
+          <div class="result-toolbar">
+            <div>
+              <h3>Rendered Output</h3>
+              <p>The result is preserved exactly as generated by the selected banner.</p>
+            </div>
+            <div class="result-actions" aria-label="Result actions">
+              <button type="button" class="secondary-button action-button" data-action="copy-result">Copy</button>
+              <button type="button" class="secondary-button action-button" data-action="save-image">Export PNG</button>
+              <button type="button" class="secondary-button action-button" data-action="share-result">Share</button>
+            </div>
           </div>
           <p class="action-feedback" data-action-feedback aria-live="polite"></p>
-          <pre>{{.Result}}</pre>
+          <div class="result-frame">
+            <pre>{{.Result}}</pre>
+          </div>
         </section>
         {{end}}
 
         {{if and (not .Result) (not .Error)}}
         <section class="message message-info">
-          <h2>Ready</h2>
-          <p>Choose a banner, submit the form, and the generated ASCII art will appear here.</p>
+          <h3>Ready</h3>
+          <p>Choose a banner, type your text, and the generated ASCII art will appear here with export actions and feedback.</p>
         </section>
         {{end}}
-
-        <fieldset>
-          <legend>Banner</legend>
-
-          <label>
-            <input type="radio" name="banner" value="standard" {{if eq .Banner "standard"}}checked{{end}}>
-            standard
-          </label>
-
-          <label>
-            <input type="radio" name="banner" value="shadow" {{if eq .Banner "shadow"}}checked{{end}}>
-            shadow
-          </label>
-
-          <label>
-            <input type="radio" name="banner" value="thinkertoy" {{if eq .Banner "thinkertoy"}}checked{{end}}>
-            thinkertoy
-          </label>
-        </fieldset>
-
-        <button type="submit">Generate ASCII Art</button>
-      </form>
+      </section>
     </section>
   </main>
   <script>
@@ -76,9 +135,12 @@
       const textArea = document.getElementById("text");
       const resultElement = document.querySelector(".message-success pre");
       const feedbackElement = document.querySelector("[data-action-feedback]");
+      const formFeedbackElement = document.querySelector("[data-form-feedback]");
+      const charCountElement = document.querySelector("[data-char-count]");
       const copyButton = document.querySelector('[data-action="copy-result"]');
       const saveButton = document.querySelector('[data-action="save-image"]');
       const shareButton = document.querySelector('[data-action="share-result"]');
+      const clearButton = document.querySelector('[data-action="clear-form"]');
 
       if (!form || !textArea) {
         return;
@@ -87,6 +149,18 @@
       function setFeedback(message) {
         if (feedbackElement) {
           feedbackElement.textContent = message;
+        }
+      }
+
+      function setFormFeedback(message) {
+        if (formFeedbackElement) {
+          formFeedbackElement.textContent = message;
+        }
+      }
+
+      function updateCharacterCount() {
+        if (charCountElement) {
+          charCountElement.textContent = String(textArea.value.length);
         }
       }
 
@@ -169,6 +243,23 @@
         setFeedback("Share is not available in this browser.");
       }
 
+      function clearForm() {
+        textArea.value = "";
+        updateCharacterCount();
+        setFormFeedback("Text cleared. You can start a new render.");
+        textArea.focus();
+      }
+
+      updateCharacterCount();
+      textArea.addEventListener("input", function () {
+        updateCharacterCount();
+        if (textArea.value.length === 0) {
+          setFormFeedback("Text area is empty. Submit anyway if you want to clear the result state.");
+          return;
+        }
+        setFormFeedback("Ready to generate ASCII art.");
+      });
+
       textArea.addEventListener("keydown", function (event) {
         if (event.key !== "Enter" || event.shiftKey) {
           return;
@@ -202,6 +293,12 @@
           shareResult().catch(function () {
             setFeedback("Share failed. Please try again.");
           });
+        });
+      }
+
+      if (clearButton) {
+        clearButton.addEventListener("click", function () {
+          clearForm();
         });
       }
     }());
