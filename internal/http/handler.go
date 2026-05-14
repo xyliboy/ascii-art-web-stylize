@@ -46,76 +46,42 @@ var statusPageTemplate = template.Must(template.New("status").Parse(`<!DOCTYPE h
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{.Code}} {{.Title}} - ASCII Art Web</title>
-  <style>
-    :root {
-      color-scheme: light;
-      --bg: #f5efe4;
-      --panel: #fffaf2;
-      --ink: #1f1a17;
-      --muted: #6f6257;
-      --accent: #8f4d2e;
-      --line: #d7c8b6;
-      --shadow: 0 16px 36px rgba(51, 31, 17, 0.12);
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      background:
-        radial-gradient(circle at top left, rgba(143, 77, 46, 0.16), transparent 28%),
-        linear-gradient(180deg, #f9f4ec 0%, var(--bg) 100%);
-      color: var(--ink);
-      font-family: Georgia, "Times New Roman", serif;
-    }
-    .status-shell {
-      width: min(720px, calc(100% - 32px));
-      padding: 48px 32px;
-      text-align: center;
-      background: var(--panel);
-      border: 1px solid rgba(143, 77, 46, 0.12);
-      border-radius: 28px;
-      box-shadow: var(--shadow);
-    }
-    .status-code {
-      margin: 0;
-      font-size: clamp(4rem, 16vw, 8rem);
-      line-height: 0.9;
-      color: var(--accent);
-    }
-    .status-title {
-      margin: 12px 0 0;
-      font-size: clamp(1.5rem, 4vw, 2.3rem);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-    .status-message {
-      margin: 18px auto 0;
-      max-width: 48ch;
-      color: var(--muted);
-      font-size: 1.05rem;
-      line-height: 1.6;
-    }
-    .status-link {
-      display: inline-block;
-      margin-top: 24px;
-      padding: 12px 18px;
-      border-radius: 999px;
-      background: var(--accent);
-      color: #fff8f1;
-      text-decoration: none;
-      font-weight: 700;
-    }
-  </style>
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <main class="status-shell">
-    <p class="status-code">{{.Code}}</p>
-    <h1 class="status-title">{{.Title}}</h1>
-    <p class="status-message">{{.Message}}</p>
-    <a class="status-link" href="/">Back To Home</a>
+  <main class="page-shell status-page-shell">
+    <section class="hero status-hero">
+      <div class="hero-copy status-main-card">
+        <p class="eyebrow">ASCII Art Web</p>
+        <p class="status-code">{{.Code}}</p>
+        <h1 class="status-title">{{.Title}}</h1>
+        <p class="status-message">{{.Message}}</p>
+        <a class="status-link" href="/">Back To Home</a>
+      </div>
+      <aside class="hero-card status-side-card" aria-label="Error summary">
+        <p class="panel-kicker">Generator Status</p>
+        <h2>{{.Title}}</h2>
+        <p class="intro">The app is still running with the same interface, background, and typography as the main generator.</p>
+        <p class="intro intro-secondary">Return home to create ASCII art with the standard, shadow, or thinkertoy banner.</p>
+      </aside>
+    </section>
   </main>
+  <script>
+    (function () {
+      const rootElement = document.documentElement;
+      window.addEventListener("pointermove", function (event) {
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+        const shiftX = ((event.clientX - centerX) / centerX) * 18;
+        const shiftY = ((event.clientY - centerY) / centerY) * 18;
+
+        rootElement.style.setProperty("--star-shift-x", shiftX.toFixed(2) + "px");
+        rootElement.style.setProperty("--star-shift-y", shiftY.toFixed(2) + "px");
+        rootElement.style.setProperty("--star-counter-x", (shiftX * -0.6).toFixed(2) + "px");
+        rootElement.style.setProperty("--star-counter-y", (shiftY * -0.6).toFixed(2) + "px");
+      });
+    }());
+  </script>
 </body>
 </html>`))
 

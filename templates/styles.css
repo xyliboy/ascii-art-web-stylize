@@ -9,14 +9,18 @@
   --accent-deep: #1d4ed8;
   --accent-soft: #dbeafe;
   --accent-warm: #f59e0b;
-  --error-bg: #fee2e2;
-  --error-text: #8a1f1f;
+  --error-bg: linear-gradient(180deg, var(--accent), var(--accent-deep));
+  --error-text: #ffffff;
   --success-bg: #e7f8ef;
   --success-text: #166534;
   --info-bg: #eef2ff;
   --info-text: #373f68;
   --shadow: 0 14px 32px rgba(33, 46, 77, 0.09);
   --shadow-strong: 0 22px 48px rgba(33, 46, 77, 0.13);
+  --star-shift-x: 0px;
+  --star-shift-y: 0px;
+  --star-counter-x: 0px;
+  --star-counter-y: 0px;
 }
 
 * {
@@ -24,9 +28,16 @@
 }
 
 html {
+  min-height: 100%;
   overflow-y: scroll;
   scrollbar-color: var(--accent) #dfe8f8;
   scrollbar-width: thin;
+  background:
+    linear-gradient(125deg, rgba(0, 245, 255, 0.13), transparent 28%),
+    linear-gradient(235deg, rgba(123, 92, 255, 0.16), transparent 30%),
+    linear-gradient(180deg, rgba(37, 99, 235, 0.18), transparent 62%),
+    linear-gradient(180deg, #02030a 0%, #06091a 38%, #080f27 68%, #010208 100%);
+  background-attachment: fixed;
 }
 
 html::-webkit-scrollbar {
@@ -46,15 +57,54 @@ html::-webkit-scrollbar-thumb {
 body {
   margin: 0;
   min-height: 100vh;
-  background:
-    linear-gradient(90deg, rgba(37, 99, 235, 0.05) 1px, transparent 1px),
-    linear-gradient(180deg, rgba(37, 99, 235, 0.05) 1px, transparent 1px),
-    linear-gradient(180deg, #fbfcff 0%, var(--bg) 100%);
-  background-size: 28px 28px, 28px 28px, auto;
+  position: relative;
+  isolation: isolate;
+  overflow-x: hidden;
+  background: transparent;
   color: var(--ink);
   font-family: "Segoe UI", "Trebuchet MS", Arial, sans-serif;
   font-size: 16px;
   font-weight: 600;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+body::before {
+  z-index: 0;
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.96) 0 1px, rgba(255, 255, 255, 0.24) 1.4px 4px, transparent 4.2px),
+    radial-gradient(circle, rgba(80, 247, 255, 0.92) 0 1.2px, rgba(80, 247, 255, 0.22) 1.6px 5px, transparent 5.2px),
+    radial-gradient(circle, rgba(153, 129, 255, 0.9) 0 1px, rgba(153, 129, 255, 0.18) 1.4px 4.4px, transparent 4.6px);
+  background-size:
+    180px 180px,
+    260px 260px,
+    380px 380px;
+  background-position:
+    0 0,
+    80px 60px,
+    30px 140px;
+  opacity: 0.9;
+  transform: translate3d(var(--star-shift-x), var(--star-shift-y), 0);
+  transition: transform 0.18s ease-out;
+  animation: starPulse 10s ease-in-out infinite alternate;
+}
+
+body::after {
+  z-index: 0;
+  background-image:
+    linear-gradient(90deg, rgba(42, 229, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(123, 92, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(120deg, transparent 0 44%, rgba(80, 247, 255, 0.08) 45%, transparent 46% 100%);
+  background-size: 96px 96px, 96px 96px, 360px 360px;
+  opacity: 0.42;
+  transform: translate3d(var(--star-counter-x), var(--star-counter-y), 0);
+  transition: transform 0.22s ease-out;
 }
 
 strong {
@@ -72,6 +122,30 @@ textarea {
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
   padding: 48px 0 64px;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes starPulse {
+  0% {
+    opacity: 0.82;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes nebulaGlow {
+  0% {
+    opacity: 0.78;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0.96;
+    transform: scale(1.015);
+  }
 }
 
 .hero {
@@ -151,6 +225,80 @@ h1 {
 .hero-card .intro {
   font-size: 0.98rem;
   line-height: 1.55;
+}
+
+.status-page-shell {
+  min-height: 100vh;
+  display: grid;
+  align-items: center;
+}
+
+.status-hero {
+  margin-bottom: 0;
+}
+
+.status-main-card {
+  display: grid;
+  align-content: center;
+  background: linear-gradient(180deg, var(--accent), var(--accent-deep));
+  border-color: rgba(255, 255, 255, 0.38);
+  border-top-color: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 22px 48px rgba(37, 99, 235, 0.28);
+}
+
+.status-main-card .eyebrow,
+.status-main-card .status-code,
+.status-main-card .status-title,
+.status-main-card .status-message {
+  color: #ffffff;
+}
+
+.status-main-card .eyebrow {
+  opacity: 0.9;
+}
+
+.status-code {
+  margin: 0;
+  font-size: clamp(4.8rem, 15vw, 9rem);
+  font-weight: 900;
+  line-height: 0.88;
+}
+
+.status-title {
+  max-width: none;
+  margin-top: 12px;
+  font-size: clamp(1.5rem, 4vw, 2.8rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.status-message {
+  max-width: 56ch;
+  margin: 18px 0 0;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 1.05rem;
+  font-weight: 650;
+  line-height: 1.6;
+}
+
+.status-link {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 24px;
+  padding: 13px 20px;
+  border-radius: 14px;
+  background: #ffffff;
+  color: var(--accent-deep);
+  text-decoration: none;
+  font-weight: 900;
+  box-shadow: 0 10px 18px rgba(15, 23, 42, 0.16);
+}
+
+.status-side-card {
+  display: grid;
+  align-content: center;
 }
 
 .guide-button {
@@ -495,7 +643,15 @@ button:hover {
 
 .message-error {
   background: var(--error-bg);
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  border-top: 6px solid rgba(255, 255, 255, 0.78);
   color: var(--error-text);
+  box-shadow: 0 16px 34px rgba(37, 99, 235, 0.22);
+}
+
+.message-error h3,
+.message-error p {
+  color: #ffffff;
 }
 
 .message-success {
