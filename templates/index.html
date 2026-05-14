@@ -13,13 +13,15 @@
       <div class="hero-copy">
         <p class="eyebrow">ASCII Art Maker</p>
         <h1>Turn your words into text art</h1>
-        <p class="intro">Write a word or a sentence, pick a <strong>style</strong>, and see your ASCII art appear in a clear <strong>preview</strong> area.</p>
+        <p class="intro">Write a word, name, or short message, pick a <strong>style</strong>, and watch it become clean ASCII art in the <strong>preview</strong>.</p>
+        <p class="intro intro-secondary">The page is built for simple steps: type, choose, make, then copy or save your result when it looks right.</p>
         <button type="button" class="guide-button" data-action="open-guide">Open Guide</button>
       </div>
       <aside class="hero-card" aria-label="Current tool summary">
         <p class="panel-kicker">Current Style</p>
         <h2>{{if .Banner}}{{.Banner}}{{else}}standard{{end}}</h2>
-        <p class="intro">The selected banner controls how the final <strong>ASCII letters</strong> look.</p>
+        <p class="intro">The selected banner controls the shape, weight, and mood of the final <strong>ASCII letters</strong>.</p>
+        <p class="intro intro-secondary"><strong>STANDARD</strong> is clear, <strong>SHADOW</strong> is bold, and <strong>THINKERTOY</strong> feels lighter.</p>
       </aside>
     </section>
 
@@ -190,6 +192,7 @@
       const openGuideButton = document.querySelector('[data-action="open-guide"]');
       const closeGuideButton = document.querySelector('[data-action="close-guide"]');
       const pageScrollControl = document.querySelector("[data-page-scroll-control]");
+      const motionControls = Array.from(document.querySelectorAll(".scroll-control, .page-scroll-control"));
       let resultZoom = 0.95;
       let isDraggingPreview = false;
       let dragStartX = 0;
@@ -297,6 +300,26 @@
         pageScrollControl.max = String(maxScroll);
         pageScrollControl.value = String(Math.min(window.scrollY, maxScroll));
         pageScrollControl.disabled = maxScroll === 0;
+      }
+
+      function showControlTrack(control) {
+        control.classList.add("is-moving");
+        window.clearTimeout(control.motionTimer);
+        control.motionTimer = window.setTimeout(function () {
+          control.classList.remove("is-moving");
+        }, 750);
+      }
+
+      function setupMotionControl(control) {
+        control.addEventListener("pointerenter", function () {
+          showControlTrack(control);
+        });
+        control.addEventListener("pointermove", function () {
+          showControlTrack(control);
+        });
+        control.addEventListener("input", function () {
+          showControlTrack(control);
+        });
       }
 
       function startPreviewDrag(event) {
@@ -420,6 +443,7 @@
       resizeTextArea();
       updateScrollControls();
       updatePageScrollControl();
+      motionControls.forEach(setupMotionControl);
       textArea.addEventListener("input", function () {
         updateCharacterCount();
         resizeTextArea();
