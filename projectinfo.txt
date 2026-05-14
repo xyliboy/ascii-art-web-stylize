@@ -1,4 +1,4 @@
-Objectives
+~Objectives
 You must follow the same principles as the first subject.
 
 Ascii-art-stylize consists on making your site :
