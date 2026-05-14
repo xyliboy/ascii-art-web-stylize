@@ -1,3 +1,3 @@
-module ascii-art-web
+module ascii-art-web-stylize
 
-go 1.22
+go 1.26.1
