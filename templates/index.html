@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASCII Art Web Stylize</title>
+  <link rel="stylesheet" href="/styles.css">
+
+</head>
+<body>
+  <header>
+    <h1>ASCII Stylize</h1>
+    <p>Turn your text into ASCII art.</p>
+  </header>
+
+  <main>
+    <section class="form-section">
+      <form action="/ascii-art" method="post">
+        <div class="field">
+          <label for="text">Your text</label>
+          <textarea id="text" name="text" rows="5" placeholder="Type something...">{{.Text}}</textarea>
+        </div>
+
+        <div class="field">
+          <label>Banner</label>
+          <div class="banner-options">
+            <label class="banner-option">
+              <input type="radio" name="banner" value="standard" {{if eq .Banner "standard"}}checked{{end}}>
+              Standard
+            </label>
+            <label class="banner-option">
+              <input type="radio" name="banner" value="shadow" {{if eq .Banner "shadow"}}checked{{end}}>
+              Shadow
+            </label>
+            <label class="banner-option">
+              <input type="radio" name="banner" value="thinkertoy" {{if eq .Banner "thinkertoy"}}checked{{end}}>
+              Thinkertoy
+            </label>
+          </div>
+        </div>
+
+        <button type="submit">Push for Art</button>
+      </form>
+    </section>
+
+    {{if .Error}}
+    <section class="result-section">
+      <div class="error">
+        <p>{{.Error}}</p>
+      </div>
+    </section>
+    {{end}}
+
+    {{if .Result}}
+    <section class="result-section">
+      <h2>Result</h2>
+      <pre>{{.Result}}</pre>
+    </section>
+    {{end}}
+  </main>
+
+  <footer>
+    <p>ASCII Art Web Stylize</p>
+  </footer>
+</body>
+</html>

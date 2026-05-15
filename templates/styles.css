@@ -1,0 +1,166 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: sans-serif;
+  background-color: #f5f5f5;
+  color: #222;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  background-color: #ffffff;
+  border-bottom: 1px solid #ddd;
+  padding: 24px 32px;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+header p {
+  margin-top: 4px;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+main {
+  flex: 1;
+  max-width: 720px;
+  width: 100%;
+  margin: 40px auto;
+  padding: 0 16px;
+}
+
+footer {
+  text-align: center;
+  padding: 16px;
+  font-size: 0.85rem;
+  color: #888;
+  border-top: 1px solid #ddd;
+  background-color: #ffffff;
+}
+
+.form-section {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.field {
+  margin-bottom: 20px;
+}
+
+.field label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  resize: vertical;
+  font-family: sans-serif;
+  background-color: #fafafa;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #555;
+  background-color: #fff;
+}
+
+.banner-options {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.banner-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.banner-option input[type="radio"] {
+  accent-color: #222;
+}
+
+button[type="submit"] {
+  display: inline-block;
+  padding: 10px 24px;
+  background-color: #222;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: #444;
+}
+
+.result-section {
+  margin-top: 32px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.result-section h2 {
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+pre {
+  overflow-x: auto;
+  font-family: "Courier New", monospace;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  background-color: #f5f5f5;
+  padding: 16px;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+}
+
+.error {
+  color: #b00020;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 600px) {
+  header {
+    padding: 16px;
+  }
+
+  main {
+    margin: 24px auto;
+  }
+
+  .form-section,
+  .result-section {
+    padding: 16px;
+  }
+
+  button[type="submit"] {
+    width: 100%;
+  }
+}

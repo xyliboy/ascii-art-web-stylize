@@ -12,8 +12,7 @@ func main() {
 	http.HandleFunc("/", handlers.HomeHandler)
 	http.HandleFunc("/ascii-art", handlers.AsciiArtHandler)
 
-	// Static files like CSS and JS
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	http.Handle("/styles.css", http.FileServer(http.Dir("templates")))
 
 	// REST API endpoints
 	http.HandleFunc("/api/banners", handlers.ApiBannersHandler)

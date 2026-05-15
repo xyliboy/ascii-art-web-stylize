@@ -16,6 +16,8 @@ import (
 type PageData struct {
 	Result string
 	Error  string
+	Text   string
+	Banner string
 }
 
 // renderTemplate loads the HTML page and fills it with data.
@@ -39,10 +41,11 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if err := renderTemplate(w, PageData{}); err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			http.Error(w, "Not Found", http.StatusNotFound)
+			http.Error(w, "404 Not Found: template missing", http.StatusNotFound)
 		} else {
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
 		}
+		return
 	}
 }
 
@@ -55,7 +58,8 @@ func AsciiArtHandler(w http.ResponseWriter, r *http.Request) {
 
 	// No text means nothing to render.
 	if text == "" {
-		http.Error(w, "Bad Request", http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
+		renderTemplate(w, PageData{Error: "400 Bad Request - invalid input: please enter some text.", Banner: banner})
 		return
 	}
 
@@ -67,9 +71,11 @@ func AsciiArtHandler(w http.ResponseWriter, r *http.Request) {
 	bannerMap, err := ascii.LoadBanner(banner)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			http.Error(w, "Not Found", http.StatusNotFound)
+			w.WriteHeader(http.StatusNotFound)
+			renderTemplate(w, PageData{Error: "404 Not Found: banner \"" + banner + "\" does not exist.", Text: text})
 		} else {
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			w.WriteHeader(http.StatusInternalServerError)
+			renderTemplate(w, PageData{Error: "500 Internal Server Error.", Text: text})
 		}
 		return
 	}
@@ -82,7 +88,7 @@ func AsciiArtHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := renderTemplate(w, PageData{Result: result}); err != nil {
+	if err := renderTemplate(w, PageData{Result: result, Text: text, Banner: banner}); err != nil {
 		if errors.Is(err, os.ErrNotExist) {
 			http.Error(w, "Not Found", http.StatusNotFound)
 		} else {
