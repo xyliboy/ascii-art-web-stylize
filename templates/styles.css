@@ -33,7 +33,7 @@ header p {
 
 main {
   flex: 1;
-  max-width: 720px;
+  max-width: 550px;
   width: 100%;
   margin: 40px auto;
   padding: 0 16px;
@@ -99,6 +99,18 @@ textarea:focus {
 
 .banner-option input[type="radio"] {
   accent-color: #222;
+}
+
+.banner-option input[type="radio"]:focus {
+  outline: 2px solid #555;
+  outline-offset: 2px;
+}
+
+.banner-option:has(input:checked) {
+  background-color: #222;
+  color: #fff;
+  border-radius: 6px;
+  padding: 4px 8px;
 }
 
 button[type="submit"] {

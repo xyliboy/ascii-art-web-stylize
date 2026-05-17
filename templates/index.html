@@ -17,15 +17,15 @@
     <section class="form-section">
       <form action="/ascii-art" method="post">
         <div class="field">
-          <label for="text">Your text</label>
+          <label for="text">See the magic</label>
           <textarea id="text" name="text" rows="5" placeholder="Type something...">{{.Text}}</textarea>
         </div>
 
         <div class="field">
-          <label>Banner</label>
+          <label>Select a Banner</label>
           <div class="banner-options">
             <label class="banner-option">
-              <input type="radio" name="banner" value="standard" {{if eq .Banner "standard"}}checked{{end}}>
+              <input type="radio" name="banner" value="standard" {{if or (eq .Banner "standard") (eq .Banner "")}}checked{{end}}>
               Standard
             </label>
             <label class="banner-option">
