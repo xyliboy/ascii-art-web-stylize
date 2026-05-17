@@ -147,7 +147,7 @@ func TestMissingRouteReturnsNotFound(t *testing.T) {
 	if rec.Code != http.StatusNotFound {
 		t.Fatalf("expected status %d, got %d", http.StatusNotFound, rec.Code)
 	}
-	if !strings.Contains(rec.Body.String(), ">404<") || !strings.Contains(rec.Body.String(), "NOT FOUND") {
+	if !strings.Contains(rec.Body.String(), ">404<") || !strings.Contains(rec.Body.String(), "Not Found") {
 		t.Fatalf("expected standalone 404 error page, got %q", rec.Body.String())
 	}
 	if !strings.Contains(rec.Body.String(), "route /missing does not exist") {
@@ -301,6 +301,7 @@ func writeTemplate(t *testing.T) string {
 
 	templatesDir := t.TempDir()
 	templatePath := filepath.Join(templatesDir, "index.html")
+	errorTemplatePath := filepath.Join(templatesDir, "error.html")
 	stylesPath := filepath.Join(templatesDir, "styles.css")
 	templateBody := `<!DOCTYPE html>
 <html>
@@ -314,10 +315,21 @@ func writeTemplate(t *testing.T) string {
 </form>
 </body>
 </html>`
+	errorTemplateBody := `<!DOCTYPE html>
+<html>
+<body>
+<p>{{.Code}}</p>
+<h1>{{.Title}}</h1>
+<p>{{.Message}}</p>
+</body>
+</html>`
 	stylesBody := "body { font-family: monospace; }\n"
 
 	if err := os.WriteFile(templatePath, []byte(templateBody), 0o644); err != nil {
 		t.Fatalf("write template: %v", err)
+	}
+	if err := os.WriteFile(errorTemplatePath, []byte(errorTemplateBody), 0o644); err != nil {
+		t.Fatalf("write error template: %v", err)
 	}
 	if err := os.WriteFile(stylesPath, []byte(stylesBody), 0o644); err != nil {
 		t.Fatalf("write stylesheet: %v", err)

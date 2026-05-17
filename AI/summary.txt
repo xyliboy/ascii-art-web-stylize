@@ -41,3 +41,11 @@ summary: You asked me not just to list improvements but to execute the stylize o
 date: 2026-05-14
 prompt-by: ebimai
 summary: You asked for a second UI refinement pass to fix action-button geometry, remove the “like a real product page” headline wording, and prevent very large ASCII outputs from breaking the layout, so I tightened the action labels, adjusted button styling, changed the headline, capped the result area with scrolling, and kept the input panel stable on large screens.
+---
+date: 2026-05-17
+prompt-by: ebimai
+summary: You asked me to review the repository from the main branch, run project checks, and explain the architectural issue between the main HTML/CSS layer and the standalone 404/500 error pages.
+---
+date: 2026-05-17
+prompt-by: ebimai
+summary: You asked me to align the 404 and 500 pages with the upgraded main HTML/CSS first, then make the most senior architectural fix, so I moved the error UI into a shared template approach instead of keeping it as inline HTML inside the handler.
