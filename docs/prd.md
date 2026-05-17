@@ -48,7 +48,8 @@ ascii-art-web-stylize/
 │   └── handlers/
 │       ├── handlers.go      — HomeHandler and AsciiArtHandler
 │       ├── handlers_test.go — handler tests
-│       └── api.go           — REST API endpoints (bonus)
+│       ├── api.go           — REST API endpoints (bonus)
+│       └── api_test.go      — REST API tests (bonus)
 ├── templates/
 │   ├── index.html           — main HTML page
 │   └── styles.css           — stylesheet
@@ -82,5 +83,5 @@ Browser
 
 - Only standard Go packages allowed
 - HTML templates must live in the `templates/` directory
-- Banner files must live in `testdata/banners/`
+- Banner files must live in `banners/`
 - Code must follow good practices

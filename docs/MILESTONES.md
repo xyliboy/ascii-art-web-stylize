@@ -7,12 +7,12 @@ Description: Define the module name and Go version for the project.
 Dependencies: None
 Acceptance Criteria: go.mod exists in the root directory with the correct module name and Go version.
 
-### Milestone 2: ascii/ascii.go
+### Milestone 2: internal/ascii/ascii.go
 Description: Implement the ASCII art logic (LoadBanner and Render functions).
 Dependencies: Milestone 1
 Acceptance Criteria: ascii.go correctly loads banner files and renders ASCII art from text input.
 
-### Milestone 3: handlers/handlers.go
+### Milestone 3: internal/handlers/handlers.go
 Description: Implement the HTTP handlers for GET / and POST /ascii-art.
 Dependencies: Milestone 2
 Acceptance Criteria:
@@ -65,7 +65,7 @@ Acceptance Criteria: Selected banner is clearly indicated. Errors are displayed 
 
 ## Tests
 
-### Milestone 11: ascii/ascii_test.go
+### Milestone 11: internal/ascii/ascii_test.go
 Description: Implement unit tests for the ASCII art logic (LoadBanner and Render).
 Dependencies: Milestone 2
 Acceptance Criteria:
@@ -74,7 +74,7 @@ Acceptance Criteria:
 - Render produces 8-row output for a single segment
 - Render handles multi-line input, empty input, unsupported characters, and all banners
 
-### Milestone 12: handlers/handlers_test.go
+### Milestone 12: internal/handlers/handlers_test.go
 Description: Implement unit and golden tests for the HTTP handlers.
 Dependencies: Milestone 3
 Acceptance Criteria:
@@ -97,3 +97,12 @@ Acceptance Criteria:
 Description: Implement a REST API endpoint that returns the list of available banners as JSON.
 Dependencies: Milestone 2
 Acceptance Criteria: GET /api/banners returns 200 with JSON list of available banners.
+
+### Milestone 15: internal/handlers/api_test.go
+Description: Implement unit tests for the REST API endpoints.
+Dependencies: Milestone 13, Milestone 14
+Acceptance Criteria:
+- GET /api/banners returns 200 with JSON list
+- GET /api/ascii-art with valid input returns 200 with JSON response
+- GET /api/ascii-art with empty text returns 400
+- GET /api/ascii-art with unknown banner returns 404
