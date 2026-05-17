@@ -1,4 +1,4 @@
-This document defines the repository-specific development rules for `ascii-art-web`.
+﻿This document defines the repository-specific development rules for `ascii-art-web-stylize`.
 
 ## 1. Core Rules
 
@@ -22,11 +22,6 @@ This document defines the repository-specific development rules for `ascii-art-w
 - Run `gofmt -w .` before considering work complete.
 - Functions should stay small, focused, and readable.
 - Prefer single-purpose helpers over long multi-responsibility functions.
-
-### 1.3 Naming
-- Variables: descriptive camelCase
-- Functions: verb-based names
-- Types and constants: PascalCase
 
 ## 2. Functional Contract
 
@@ -54,6 +49,8 @@ This document defines the repository-specific development rules for `ascii-art-w
 - The interface must stay readable even when colors and visual accents are introduced.
 - The layout must stay responsive and visually consistent across desktop and mobile sizes.
 - The user should receive clearer feedback before, during, and after form interactions.
+- The main page and the standalone error pages should feel like parts of the same product.
+- Prefer native-feeling page scrolling over decorative custom page-scroll widgets.
 
 ## 3. Architecture Expectations
 
@@ -67,6 +64,7 @@ This document defines the repository-specific development rules for `ascii-art-w
 
 ### 3.3 Templates
 - HTML templates must live in the root `templates/` directory, per subject requirement.
+- Shared visual rules must apply consistently to the main page and standalone error pages.
 
 ## 4. Testing Expectations
 
@@ -95,15 +93,7 @@ go vet ./...
 go test ./...
 ```
 
-## 6. AI Collaboration Boundaries
-
-- The AI assistant may help design the architecture, explain concepts, draft code, and review changes.
-- The AI assistant must not replace the developers' understanding of the project.
-- The AI assistant should avoid taking over the whole project without teaching what is being done.
-- Prefer pair-programming style guidance when decisions affect learning or architecture.
-- When work can be split safely, prefer assigning clear ownership between the two developers.
-
-## 7. Documentation Alignment
+## 6. Documentation Alignment
 
 When requirements or implementation decisions change, keep these files aligned:
 - `AI/AGENTS.md`
@@ -111,3 +101,4 @@ When requirements or implementation decisions change, keep these files aligned:
 - `docs/prd.md`
 - `README.md`
 - `projectinfo.txt`
+- `audit-questions.txt`

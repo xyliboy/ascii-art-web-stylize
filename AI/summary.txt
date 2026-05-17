@@ -49,3 +49,9 @@ summary: You asked me to review the repository from the main branch, run project
 date: 2026-05-17
 prompt-by: ebimai
 summary: You asked me to align the 404 and 500 pages with the upgraded main HTML/CSS first, then make the most senior architectural fix, so I moved the error UI into a shared template approach instead of keeping it as inline HTML inside the handler.
+
+---
+date: 2026-05-17
+prompt-by: ebimai
+summary: You reset the stylize project back to an earlier clean commit and asked me to rebuild only the parts you still wanted: remove the custom page-scroll ball in favor of a more professional native blue scrollbar, make the star background feel more alive like a smooth galaxy, keep the same visual treatment on the 404 and 500 pages, then clean up the repository and check whether the project looks audit ready.
+

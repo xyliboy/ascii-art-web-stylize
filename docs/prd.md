@@ -1,8 +1,8 @@
-# PRD - ASCII ART WEB
+﻿# PRD - ASCII ART WEB STYLIZE
 
 ## 1. Purpose
 
-Build a Go HTTP server that provides a web GUI for the previous ASCII-art project. Users submit text and a banner choice through a webpage and receive the rendered ASCII-art result.
+Build a Go HTTP server that provides a web GUI for the previous ASCII-art project and present it through a more polished, responsive, and user-friendly interface.
 
 ## 2. Scope
 
@@ -14,6 +14,8 @@ Build a Go HTTP server that provides a web GUI for the previous ASCII-art projec
 - Use Go HTML templates from the root `templates/` directory
 - Provide a more polished, modern, and user-friendly interface than the base web version
 - Include CSS-driven styling and interaction feedback
+- Keep error pages visually aligned with the same shared visual system
+- Keep text readable regardless of accent or background colors
 
 ### Out of scope
 - Building a JavaScript-heavy frontend
@@ -25,7 +27,7 @@ Build a Go HTTP server that provides a web GUI for the previous ASCII-art projec
 - A user visits `GET /` and sees the form.
 - A user submits text and banner via `POST /ascii-art`.
 - The server renders the ASCII art and displays it in HTML.
-- An auditor verifies correct responses and status codes for valid and invalid requests.
+- An auditor verifies correct responses, styling quality, and status codes for valid and invalid requests.
 
 ## 4. HTTP Contract
 
@@ -33,7 +35,6 @@ Build a Go HTTP server that provides a web GUI for the previous ASCII-art projec
 - Returns the main page.
 - Status code: `200 OK`
 - The page links to a stylesheet served from `GET /styles.css`.
-- The page supports keyboard submission with `Enter`, while `Shift+Enter` keeps multiline input possible.
 
 ### 4.2 `POST /ascii-art`
 - Accepts text and banner from a form submission.
@@ -76,8 +77,9 @@ Build a Go HTTP server that provides a web GUI for the previous ASCII-art projec
 - Presents user-facing error feedback inside the page for form-related failures.
 - Presents standalone styled error pages for route-level or transport-level failures such as `404 Not Found`.
 - Provides browser-side result actions such as copy, save-as-image, and share without changing the server API contract.
-- Must keep text readable and visually distinct regardless of background and accent colors.
-- Must remain responsive and consistent across screen sizes.
+- Uses a shared galaxy-style background treatment across both main and error pages.
+- Uses native page scrolling instead of a custom page-scroll widget.
+- Must remain responsive and visually consistent across screen sizes.
 
 ## 8. Testing Strategy
 
@@ -100,4 +102,5 @@ Build a Go HTTP server that provides a web GUI for the previous ASCII-art projec
 - Status codes match the subject requirements.
 - Templates live under `templates/`.
 - The page is visually improved, responsive, and provides clearer feedback than the base web version.
+- The page remains readable and visually coherent under the stylized galaxy background.
 - `gofmt`, `go vet`, and `go test` all pass.

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <input class="page-scroll-control" data-page-scroll-control type="range" min="0" max="0" value="0" aria-label="Move page up and down">
   <main class="page-shell">
     <section class="hero">
       <div class="hero-copy">
@@ -191,8 +190,6 @@
       const guidePanel = document.querySelector("[data-guide-panel]");
       const openGuideButton = document.querySelector('[data-action="open-guide"]');
       const closeGuideButton = document.querySelector('[data-action="close-guide"]');
-      const pageScrollControl = document.querySelector("[data-page-scroll-control]");
-      const motionControls = Array.from(document.querySelectorAll(".scroll-control, .page-scroll-control"));
       const rootElement = document.documentElement;
       let resultZoom = 0.95;
       let isDraggingPreview = false;
@@ -209,8 +206,8 @@
 
         rootElement.style.setProperty("--star-shift-x", shiftX.toFixed(2) + "px");
         rootElement.style.setProperty("--star-shift-y", shiftY.toFixed(2) + "px");
-        rootElement.style.setProperty("--star-counter-x", (shiftX * -0.6).toFixed(2) + "px");
-        rootElement.style.setProperty("--star-counter-y", (shiftY * -0.6).toFixed(2) + "px");
+        rootElement.style.setProperty("--star-counter-x", (shiftX * -0.55).toFixed(2) + "px");
+        rootElement.style.setProperty("--star-counter-y", (shiftY * -0.55).toFixed(2) + "px");
       }
 
       window.addEventListener("pointermove", updateBackgroundMotion);
@@ -301,20 +298,6 @@
         if (scrollControlY) {
           scrollControlY.value = String(resultFrame ? resultFrame.scrollTop : 0);
         }
-      }
-
-      function maxPageScroll() {
-        return Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-      }
-
-      function updatePageScrollControl() {
-        if (!pageScrollControl) {
-          return;
-        }
-        const maxScroll = maxPageScroll();
-        pageScrollControl.max = String(maxScroll);
-        pageScrollControl.value = String(Math.min(window.scrollY, maxScroll));
-        pageScrollControl.disabled = maxScroll === 0;
       }
 
       function showControlTrack(control) {
@@ -457,7 +440,6 @@
       updateCharacterCount();
       resizeTextArea();
       updateScrollControls();
-      updatePageScrollControl();
       motionControls.forEach(setupMotionControl);
       textArea.addEventListener("input", function () {
         updateCharacterCount();
@@ -517,18 +499,6 @@
         resultFrame.addEventListener("scroll", syncScrollControls);
         window.addEventListener("mouseup", stopPreviewDrag);
         window.addEventListener("resize", updateScrollControls);
-      }
-
-      window.addEventListener("scroll", updatePageScrollControl);
-      window.addEventListener("resize", updatePageScrollControl);
-
-      if (pageScrollControl) {
-        pageScrollControl.addEventListener("input", function () {
-          window.scrollTo({
-            top: Number(pageScrollControl.value),
-            behavior: "auto"
-          });
-        });
       }
 
       if (scrollControlX) {
