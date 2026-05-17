@@ -181,6 +181,7 @@
       const resultFrame = document.querySelector(".result-frame");
       const scrollControlX = document.querySelector('[data-scroll-control="x"]');
       const scrollControlY = document.querySelector('[data-scroll-control="y"]');
+      const motionControls = document.querySelectorAll(".scroll-control");
       const copyButton = document.querySelector('[data-action="copy-result"]');
       const saveButton = document.querySelector('[data-action="save-image"]');
       const shareButton = document.querySelector('[data-action="share-result"]');
@@ -449,6 +450,20 @@
           return;
         }
         setFormFeedback("Ready to make ASCII art.");
+      });
+
+      textArea.addEventListener("keydown", function (event) {
+        if (event.key !== "Enter" || event.shiftKey) {
+          return;
+        }
+
+        event.preventDefault();
+        if (typeof form.requestSubmit === "function") {
+          form.requestSubmit();
+          return;
+        }
+
+        form.submit();
       });
 
       if (copyButton) {
