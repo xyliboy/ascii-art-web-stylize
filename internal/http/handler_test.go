@@ -172,6 +172,23 @@ func TestWrongMethodReturnsBadRequest(t *testing.T) {
 	}
 }
 
+func TestPostHomeReturnsBadRequest(t *testing.T) {
+	templatesDir := writeTemplate(t)
+	handler := NewHandler(templatesDir, &stubRenderer{})
+
+	req := httptest.NewRequest(http.MethodPost, "/", nil)
+	rec := httptest.NewRecorder()
+
+	handler.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusBadRequest {
+		t.Fatalf("expected status %d, got %d", http.StatusBadRequest, rec.Code)
+	}
+	if !strings.Contains(rec.Body.String(), "method POST is not allowed for /") {
+		t.Fatalf("expected detailed method error message, got %q", rec.Body.String())
+	}
+}
+
 func TestMissingTemplateReturnsNotFound(t *testing.T) {
 	handler := NewHandler(t.TempDir(), &stubRenderer{})
 
@@ -293,6 +310,44 @@ func TestMissingStylesheetReturnsNotFound(t *testing.T) {
 	}
 	if !strings.Contains(rec.Body.String(), "stylesheet templates/styles.css is missing") {
 		t.Fatalf("expected detailed stylesheet error, got %q", rec.Body.String())
+	}
+}
+
+func TestStylesWrongMethodReturnsBadRequest(t *testing.T) {
+	templatesDir := writeTemplate(t)
+	handler := NewHandler(templatesDir, &stubRenderer{})
+
+	req := httptest.NewRequest(http.MethodPost, "/styles.css", nil)
+	rec := httptest.NewRecorder()
+
+	handler.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusBadRequest {
+		t.Fatalf("expected status %d, got %d", http.StatusBadRequest, rec.Code)
+	}
+	if !strings.Contains(rec.Body.String(), "method POST is not allowed for /styles.css") {
+		t.Fatalf("expected detailed method error message, got %q", rec.Body.String())
+	}
+}
+
+func TestMissingErrorTemplateFallsBackToHTTPError(t *testing.T) {
+	templatesDir := t.TempDir()
+	templatePath := filepath.Join(templatesDir, "index.html")
+	if err := os.WriteFile(templatePath, []byte("<html></html>"), 0o644); err != nil {
+		t.Fatalf("write template: %v", err)
+	}
+
+	handler := NewHandler(templatesDir, &stubRenderer{})
+	req := httptest.NewRequest(http.MethodGet, "/missing", nil)
+	rec := httptest.NewRecorder()
+
+	handler.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusNotFound {
+		t.Fatalf("expected status %d, got %d", http.StatusNotFound, rec.Code)
+	}
+	if !strings.Contains(rec.Body.String(), "not found: route /missing does not exist") {
+		t.Fatalf("expected plain fallback error body, got %q", rec.Body.String())
 	}
 }
 

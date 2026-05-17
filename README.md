@@ -6,6 +6,7 @@
 
 ## Authors
 
+- gtzimoka
 - ebimai
 - gxylinas
 

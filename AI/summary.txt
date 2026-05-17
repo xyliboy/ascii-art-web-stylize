@@ -60,3 +60,8 @@ date: 2026-05-17
 prompt-by: ebimai
 summary: You asked me to restore Enter-to-submit behavior, fix the broken preview size controls, and repair the Copy, Save PNG, and Share actions; I traced the issue to a missing motionControls selector that caused the inline script to stop before wiring the UI handlers, then I restored that selector and added Enter submit while preserving Shift+Enter for multiline input.
 
+---
+date: 2026-05-17
+prompt-by: ebimai
+summary: You asked me to harden the stylize project for audit readiness, search for edge cases, and verify the full repository before the final push; I added a .gitignore for local binaries and cache output, strengthened HTTP handler coverage for wrong-method and error-template fallback cases, and re-ran gofmt, go test, go vet, and go build successfully using a repo-local Go cache.
+
