@@ -65,3 +65,8 @@ date: 2026-05-17
 prompt-by: ebimai
 summary: You asked me to harden the stylize project for audit readiness, search for edge cases, and verify the full repository before the final push; I added a .gitignore for local binaries and cache output, strengthened HTTP handler coverage for wrong-method and error-template fallback cases, and re-ran gofmt, go test, go vet, and go build successfully using a repo-local Go cache.
 
+---
+date: 2026-05-17
+prompt-by: ebimai
+summary: You asked me to add a dedicated main.go test, write short English comments above the main Go functions, and prepare a learner-friendly audit summary; I added a testable server-construction helper with main_test.go coverage, documented the core functions in the main, banner, render, and HTTP layers, and re-ran formatting and verification checks successfully.
+

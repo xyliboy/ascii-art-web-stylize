@@ -14,10 +14,14 @@ type Service struct {
 	loader *banner.Loader
 }
 
+// NewService creates the ASCII render service around a banner loader.
+// The service stays focused on rendering while the loader owns filesystem access.
 func NewService(loader *banner.Loader) *Service {
 	return &Service{loader: loader}
 }
 
+// Render converts input text into ASCII art for the selected banner.
+// It normalizes newline forms, validates characters, and builds the final output.
 func (s *Service) Render(text, bannerName string) (string, error) {
 	font, err := s.loader.Load(bannerName)
 	if err != nil {
@@ -52,6 +56,8 @@ func (s *Service) Render(text, bannerName string) (string, error) {
 	return output.String(), nil
 }
 
+// normalizeInput aligns browser and CLI-style newline input into one format.
+// It also turns literal \n sequences into actual line breaks before rendering.
 func normalizeInput(text string) string {
 	text = strings.ReplaceAll(text, "\r\n", "\n")
 	text = strings.ReplaceAll(text, "\r", "\n")
