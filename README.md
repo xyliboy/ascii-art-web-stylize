@@ -44,9 +44,6 @@ http://localhost:8080
 - Responsive layout for smaller screens
 - Result actions for copy, export, and share
 
-## Audit Help
-
-- Review [audit-questions.txt](/c:/Users/ligor/ascii-art-web-stylize/audit-questions.txt) before the final audit pass.
 
 ## Verification
 
