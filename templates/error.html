@@ -24,21 +24,6 @@
       </aside>
     </section>
   </main>
-  <script>
-    (function () {
-      const rootElement = document.documentElement;
-      window.addEventListener("pointermove", function (event) {
-        const centerX = window.innerWidth / 2;
-        const centerY = window.innerHeight / 2;
-        const shiftX = ((event.clientX - centerX) / centerX) * 18;
-        const shiftY = ((event.clientY - centerY) / centerY) * 18;
-
-        rootElement.style.setProperty("--star-shift-x", shiftX.toFixed(2) + "px");
-        rootElement.style.setProperty("--star-shift-y", shiftY.toFixed(2) + "px");
-        rootElement.style.setProperty("--star-counter-x", (shiftX * -0.55).toFixed(2) + "px");
-        rootElement.style.setProperty("--star-counter-y", (shiftY * -0.55).toFixed(2) + "px");
-      });
-    }());
-  </script>
+  <script src="/app.js"></script>
 </body>
 </html>

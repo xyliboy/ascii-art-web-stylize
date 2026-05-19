@@ -56,11 +56,13 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		h.handleHome(w)
 	case r.URL.Path == "/styles.css" && r.Method == http.MethodGet:
 		h.handleStyles(w, r)
+	case r.URL.Path == "/app.js" && r.Method == http.MethodGet:
+		h.handleAppJS(w, r)
 	case r.URL.Path == "/ascii-art" && r.Method == http.MethodPost:
 		h.handleASCIIArt(w, r)
 	case r.URL.Path == "/" || r.URL.Path == "/ascii-art":
 		h.writeStatusError(w, http.StatusBadRequest, fmt.Sprintf("bad request: method %s is not allowed for %s", r.Method, r.URL.Path))
-	case r.URL.Path == "/styles.css":
+	case r.URL.Path == "/styles.css" || r.URL.Path == "/app.js":
 		h.writeStatusError(w, http.StatusBadRequest, fmt.Sprintf("bad request: method %s is not allowed for %s", r.Method, r.URL.Path))
 	default:
 		h.writeStatusError(w, http.StatusNotFound, fmt.Sprintf("not found: route %s does not exist", r.URL.Path))
@@ -87,6 +89,19 @@ func (h *Handler) handleStyles(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/css; charset=utf-8")
 	http.ServeFile(w, r, cssPath)
+}
+
+// handleAppJS serves the shared browser-side enhancement script.
+// It keeps optional UI interactions outside the HTML template body.
+func (h *Handler) handleAppJS(w http.ResponseWriter, r *http.Request) {
+	jsPath := filepath.Join(h.templatesDir, "app.js")
+	if _, err := os.Stat(jsPath); err != nil {
+		h.writeStatusError(w, http.StatusNotFound, "not found: script templates/app.js is missing")
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/javascript; charset=utf-8")
+	http.ServeFile(w, r, jsPath)
 }
 
 // handleASCIIArt parses the form, validates inputs, and renders the output page.

@@ -291,6 +291,23 @@ func TestGetStylesReturnsCSS(t *testing.T) {
 	}
 }
 
+func TestGetAppJSReturnsJavaScript(t *testing.T) {
+	templatesDir := writeTemplate(t)
+	handler := NewHandler(templatesDir, &stubRenderer{})
+
+	req := httptest.NewRequest(http.MethodGet, "/app.js", nil)
+	rec := httptest.NewRecorder()
+
+	handler.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("expected status %d, got %d", http.StatusOK, rec.Code)
+	}
+	if got := rec.Header().Get("Content-Type"); !strings.Contains(got, "application/javascript") {
+		t.Fatalf("expected JavaScript content type, got %q", got)
+	}
+}
+
 func TestMissingStylesheetReturnsNotFound(t *testing.T) {
 	templatesDir := t.TempDir()
 	templatePath := filepath.Join(templatesDir, "index.html")
@@ -313,6 +330,28 @@ func TestMissingStylesheetReturnsNotFound(t *testing.T) {
 	}
 }
 
+func TestMissingAppJSReturnsNotFound(t *testing.T) {
+	templatesDir := t.TempDir()
+	templatePath := filepath.Join(templatesDir, "index.html")
+	if err := os.WriteFile(templatePath, []byte("<html></html>"), 0o644); err != nil {
+		t.Fatalf("write template: %v", err)
+	}
+
+	handler := NewHandler(templatesDir, &stubRenderer{})
+
+	req := httptest.NewRequest(http.MethodGet, "/app.js", nil)
+	rec := httptest.NewRecorder()
+
+	handler.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusNotFound {
+		t.Fatalf("expected status %d, got %d", http.StatusNotFound, rec.Code)
+	}
+	if !strings.Contains(rec.Body.String(), "script templates/app.js is missing") {
+		t.Fatalf("expected detailed app.js error, got %q", rec.Body.String())
+	}
+}
+
 func TestStylesWrongMethodReturnsBadRequest(t *testing.T) {
 	templatesDir := writeTemplate(t)
 	handler := NewHandler(templatesDir, &stubRenderer{})
@@ -326,6 +365,23 @@ func TestStylesWrongMethodReturnsBadRequest(t *testing.T) {
 		t.Fatalf("expected status %d, got %d", http.StatusBadRequest, rec.Code)
 	}
 	if !strings.Contains(rec.Body.String(), "method POST is not allowed for /styles.css") {
+		t.Fatalf("expected detailed method error message, got %q", rec.Body.String())
+	}
+}
+
+func TestAppJSWrongMethodReturnsBadRequest(t *testing.T) {
+	templatesDir := writeTemplate(t)
+	handler := NewHandler(templatesDir, &stubRenderer{})
+
+	req := httptest.NewRequest(http.MethodPost, "/app.js", nil)
+	rec := httptest.NewRecorder()
+
+	handler.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusBadRequest {
+		t.Fatalf("expected status %d, got %d", http.StatusBadRequest, rec.Code)
+	}
+	if !strings.Contains(rec.Body.String(), "method POST is not allowed for /app.js") {
 		t.Fatalf("expected detailed method error message, got %q", rec.Body.String())
 	}
 }
@@ -358,6 +414,7 @@ func writeTemplate(t *testing.T) string {
 	templatePath := filepath.Join(templatesDir, "index.html")
 	errorTemplatePath := filepath.Join(templatesDir, "error.html")
 	stylesPath := filepath.Join(templatesDir, "styles.css")
+	appJSPath := filepath.Join(templatesDir, "app.js")
 	templateBody := `<!DOCTYPE html>
 <html>
 <body>
@@ -379,6 +436,7 @@ func writeTemplate(t *testing.T) string {
 </body>
 </html>`
 	stylesBody := "body { font-family: monospace; }\n"
+	appJSBody := "console.log('app');\n"
 
 	if err := os.WriteFile(templatePath, []byte(templateBody), 0o644); err != nil {
 		t.Fatalf("write template: %v", err)
@@ -388,6 +446,9 @@ func writeTemplate(t *testing.T) string {
 	}
 	if err := os.WriteFile(stylesPath, []byte(stylesBody), 0o644); err != nil {
 		t.Fatalf("write stylesheet: %v", err)
+	}
+	if err := os.WriteFile(appJSPath, []byte(appJSBody), 0o644); err != nil {
+		t.Fatalf("write app.js: %v", err)
 	}
 
 	return templatesDir

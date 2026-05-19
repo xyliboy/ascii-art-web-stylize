@@ -69,4 +69,8 @@ summary: You asked me to harden the stylize project for audit readiness, search 
 date: 2026-05-17
 prompt-by: ebimai
 summary: You asked me to add a dedicated main.go test, write short English comments above the main Go functions, and prepare a learner-friendly audit summary; I added a testable server-construction helper with main_test.go coverage, documented the core functions in the main, banner, render, and HTTP layers, and re-ran formatting and verification checks successfully.
+---
+date: 2026-05-19
+prompt-by: ebimai
+summary: You asked me to move the browser-side JavaScript out of the HTML templates into a dedicated static /app.js asset and to clean the repository by removing the local .gocache directory so the project stays inside the stylize contract while looking cleaner in audit and review.
 
