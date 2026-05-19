@@ -51,19 +51,31 @@ func NewHandler(templatesDir string, renderer Renderer) *Handler {
 // ServeHTTP dispatches each request to the correct route handler.
 // It also centralizes method validation and route-level error handling.
 func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	switch {
-	case r.URL.Path == "/" && r.Method == http.MethodGet:
+	switch r.URL.Path {
+	case "/":
+		if r.Method != http.MethodGet {
+			h.writeStatusError(w, http.StatusBadRequest, fmt.Sprintf("bad request: method %s is not allowed for %s", r.Method, r.URL.Path))
+			return
+		}
 		h.handleHome(w)
-	case r.URL.Path == "/styles.css" && r.Method == http.MethodGet:
-		h.handleStyles(w, r)
-	case r.URL.Path == "/app.js" && r.Method == http.MethodGet:
-		h.handleAppJS(w, r)
-	case r.URL.Path == "/ascii-art" && r.Method == http.MethodPost:
+	case "/styles.css":
+		if r.Method != http.MethodGet {
+			h.writeStatusError(w, http.StatusBadRequest, fmt.Sprintf("bad request: method %s is not allowed for %s", r.Method, r.URL.Path))
+			return
+		}
+		h.serveFile(w, r, "styles.css", "text/css; charset=utf-8", "stylesheet")
+	case "/app.js":
+		if r.Method != http.MethodGet {
+			h.writeStatusError(w, http.StatusBadRequest, fmt.Sprintf("bad request: method %s is not allowed for %s", r.Method, r.URL.Path))
+			return
+		}
+		h.serveFile(w, r, "app.js", "application/javascript; charset=utf-8", "script")
+	case "/ascii-art":
+		if r.Method != http.MethodPost {
+			h.writeStatusError(w, http.StatusBadRequest, fmt.Sprintf("bad request: method %s is not allowed for %s", r.Method, r.URL.Path))
+			return
+		}
 		h.handleASCIIArt(w, r)
-	case r.URL.Path == "/" || r.URL.Path == "/ascii-art":
-		h.writeStatusError(w, http.StatusBadRequest, fmt.Sprintf("bad request: method %s is not allowed for %s", r.Method, r.URL.Path))
-	case r.URL.Path == "/styles.css" || r.URL.Path == "/app.js":
-		h.writeStatusError(w, http.StatusBadRequest, fmt.Sprintf("bad request: method %s is not allowed for %s", r.Method, r.URL.Path))
 	default:
 		h.writeStatusError(w, http.StatusNotFound, fmt.Sprintf("not found: route %s does not exist", r.URL.Path))
 	}
@@ -78,30 +90,17 @@ func (h *Handler) handleHome(w http.ResponseWriter) {
 	}
 }
 
-// handleStyles serves the shared stylesheet used by the HTML templates.
-// It reports a clear 404 if the stylesheet file is missing.
-func (h *Handler) handleStyles(w http.ResponseWriter, r *http.Request) {
-	cssPath := filepath.Join(h.templatesDir, "styles.css")
-	if _, err := os.Stat(cssPath); err != nil {
-		h.writeStatusError(w, http.StatusNotFound, "not found: stylesheet templates/styles.css is missing")
+// serveFile serves a static file from the templates directory with the appropriate content type.
+// It reports a clear error if the file is missing, including the file type in the message.
+func (h *Handler) serveFile(w http.ResponseWriter, r *http.Request, filename, contentType, fileType string) {
+	filePath := filepath.Join(h.templatesDir, filename)
+	if _, err := os.Stat(filePath); err != nil {
+		h.writeStatusError(w, http.StatusNotFound, fmt.Sprintf("not found: %s templates/%s is missing", fileType, filename))
 		return
 	}
 
-	w.Header().Set("Content-Type", "text/css; charset=utf-8")
-	http.ServeFile(w, r, cssPath)
-}
-
-// handleAppJS serves the shared browser-side enhancement script.
-// It keeps optional UI interactions outside the HTML template body.
-func (h *Handler) handleAppJS(w http.ResponseWriter, r *http.Request) {
-	jsPath := filepath.Join(h.templatesDir, "app.js")
-	if _, err := os.Stat(jsPath); err != nil {
-		h.writeStatusError(w, http.StatusNotFound, "not found: script templates/app.js is missing")
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/javascript; charset=utf-8")
-	http.ServeFile(w, r, jsPath)
+	w.Header().Set("Content-Type", contentType)
+	http.ServeFile(w, r, filePath)
 }
 
 // handleASCIIArt parses the form, validates inputs, and renders the output page.
@@ -187,8 +186,8 @@ func (h *Handler) renderStatusPage(w http.ResponseWriter, statusCode int, data s
 	return page.Execute(w, data)
 }
 
-// renderFormError re-renders the main page while preserving user-facing form feedback.
-// It keeps validation and rendering errors inside the same page flow when appropriate.
+// renderFormError re-renders the main page while preserving form feedback.
+// It falls back to template error handling if page rendering fails.
 func (h *Handler) renderFormError(w http.ResponseWriter, statusCode int, data pageData) {
 	if err := h.renderPage(w, statusCode, data); err != nil {
 		h.writeTemplateError(w, err)

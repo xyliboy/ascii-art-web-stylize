@@ -45,15 +45,23 @@
     return;
   }
 
-  function setFeedback(message) {
-    if (feedbackElement) {
-      feedbackElement.textContent = message;
+  function setMessage(element, message) {
+    if (element) {
+      element.textContent = message;
     }
   }
 
+  function setFeedback(message) {
+    setMessage(feedbackElement, message);
+  }
+
   function setFormFeedback(message) {
-    if (formFeedbackElement) {
-      formFeedbackElement.textContent = message;
+    setMessage(formFeedbackElement, message);
+  }
+
+  function onElementClick(element, handler) {
+    if (element) {
+      element.addEventListener("click", handler);
     }
   }
 
@@ -270,6 +278,7 @@
   resizeTextArea();
   updateScrollControls();
   motionControls.forEach(setupMotionControl);
+  
   textArea.addEventListener("input", function () {
     updateCharacterCount();
     resizeTextArea();
@@ -294,45 +303,33 @@
     form.submit();
   });
 
-  if (copyButton) {
-    copyButton.addEventListener("click", function () {
-      copyResult().catch(function () {
-        setFeedback("Copy failed. Please try again.");
-      });
+  onElementClick(copyButton, function () {
+    copyResult().catch(function () {
+      setFeedback("Copy failed. Please try again.");
     });
-  }
+  });
 
-  if (saveButton) {
-    saveButton.addEventListener("click", function () {
-      saveResultAsImage();
-    });
-  }
+  onElementClick(saveButton, function () {
+    saveResultAsImage();
+  });
 
-  if (shareButton) {
-    shareButton.addEventListener("click", function () {
-      shareResult().catch(function () {
-        setFeedback("Share failed. Please try again.");
-      });
+  onElementClick(shareButton, function () {
+    shareResult().catch(function () {
+      setFeedback("Share failed. Please try again.");
     });
-  }
+  });
 
-  if (clearButton) {
-    clearButton.addEventListener("click", function () {
-      clearForm();
-    });
-  }
+  onElementClick(clearButton, function () {
+    clearForm();
+  });
 
-  if (zoomInButton) {
-    zoomInButton.addEventListener("click", function () {
-      changeResultZoom(0.1);
-    });
-  }
+  onElementClick(zoomInButton, function () {
+    changeResultZoom(0.1);
+  });
 
-  if (zoomOutButton) {
-    zoomOutButton.addEventListener("click", function () {
-      changeResultZoom(-0.1);
-    });
-  }
+  onElementClick(zoomOutButton, function () {
+    changeResultZoom(-0.1);
+  });
 
   if (resultFrame) {
     resultFrame.addEventListener("mousedown", startPreviewDrag);
@@ -360,15 +357,12 @@
     });
   }
 
-  if (openGuideButton) {
-    openGuideButton.addEventListener("click", function () {
-      openGuide();
-    });
-  }
+  onElementClick(openGuideButton, function () {
+    openGuide();
+  });
 
-  if (closeGuideButton) {
-    closeGuideButton.addEventListener("click", function () {
-      closeGuide();
-    });
-  }
+  onElementClick(closeGuideButton, function () {
+    closeGuide();
+  });
 }());
+
