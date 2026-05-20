@@ -1,5 +1,4 @@
-// This package contains the web handlers.
-// handlers.go deals with the HTML pages the user sees.
+// Package handlers contains the HTTP handlers for the web interface.
 package handlers
 
 import (
@@ -11,8 +10,7 @@ import (
 	"strings"
 )
 
-// PageData holds what we pass to the HTML template.
-// Result is the ASCII art output, Error is any message we want to show.
+// PageData is what we pass to the HTML template on every render.
 type PageData struct {
 	Result string
 	Error  string
@@ -20,9 +18,9 @@ type PageData struct {
 	Banner string
 }
 
-// renderTemplate loads the HTML page and fills it with data.
-// Returns os.ErrNotExist if the template file is missing.
-func renderTemplate(w http.ResponseWriter, data PageData) error {
+// renderTemplate sets the status code and renders index.html with the given data.
+// Content-Type must be set before WriteHeader — once the header is written it cannot change.
+func renderTemplate(w http.ResponseWriter, status int, data PageData) error {
 	tmpl, err := template.ParseFiles("templates/index.html")
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
@@ -30,40 +28,37 @@ func renderTemplate(w http.ResponseWriter, data PageData) error {
 		}
 		return err
 	}
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.WriteHeader(status)
 	return tmpl.Execute(w, data)
 }
 
-// HomeHandler serves the main page when the user visits /
+// HomeHandler serves GET /
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
 		return
 	}
-	if err := renderTemplate(w, PageData{}); err != nil {
+	if err := renderTemplate(w, http.StatusOK, PageData{}); err != nil {
 		if errors.Is(err, os.ErrNotExist) {
 			http.Error(w, "404 Not Found: template missing", http.StatusNotFound)
 		} else {
 			http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
 		}
-		return
 	}
 }
 
-// AsciiArtHandler handles the form submission.
-// It reads the text and banner the user picked, generates the ASCII art,
-// and sends the result back to the page.
+// AsciiArtHandler handles POST /ascii-art.
 func AsciiArtHandler(w http.ResponseWriter, r *http.Request) {
 	text := r.FormValue("text")
 	banner := r.FormValue("banner")
 
-	// No text means nothing to render.
 	if text == "" {
-		w.WriteHeader(http.StatusBadRequest)
-		renderTemplate(w, PageData{Error: "400 Bad Request - invalid input: please enter some text.", Banner: banner})
+		renderTemplate(w, http.StatusBadRequest, PageData{Error: "400 Bad Request - invalid input: please enter some text.", Banner: banner})
 		return
 	}
 
-	// If the user didn't pick a banner, use standard as default.
+	// Fall back to standard if the form sent no banner value.
 	if banner == "" {
 		banner = "standard"
 	}
@@ -71,28 +66,26 @@ func AsciiArtHandler(w http.ResponseWriter, r *http.Request) {
 	bannerMap, err := ascii.LoadBanner(banner)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			w.WriteHeader(http.StatusNotFound)
-			renderTemplate(w, PageData{Error: "404 Not Found: banner \"" + banner + "\" does not exist.", Text: text})
+			renderTemplate(w, http.StatusNotFound, PageData{Error: "404 Not Found: banner \"" + banner + "\" does not exist.", Text: text})
 		} else {
-			w.WriteHeader(http.StatusInternalServerError)
-			renderTemplate(w, PageData{Error: "500 Internal Server Error.", Text: text})
+			renderTemplate(w, http.StatusInternalServerError, PageData{Error: "500 Internal Server Error.", Text: text})
 		}
 		return
 	}
 
 	result := ascii.Render(text, bannerMap)
 
+	// An empty result means every character was outside the supported ASCII range.
 	if strings.TrimSpace(result) == "" {
-		w.WriteHeader(http.StatusBadRequest)
-		renderTemplate(w, PageData{Error: "Bad Request: input contains no supported characters. Please use standard ASCII characters (A-Z, 0-9, symbols)."})
+		renderTemplate(w, http.StatusBadRequest, PageData{Error: "400 Bad Request: input contains no supported characters. Please use standard ASCII characters (A-Z, 0-9, symbols)."})
 		return
 	}
 
-	if err := renderTemplate(w, PageData{Result: result, Text: text, Banner: banner}); err != nil {
+	if err := renderTemplate(w, http.StatusOK, PageData{Result: result, Text: text, Banner: banner}); err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			http.Error(w, "Not Found", http.StatusNotFound)
+			http.Error(w, "404 Not Found", http.StatusNotFound)
 		} else {
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
 		}
 	}
 }

@@ -1,5 +1,3 @@
-// main.go is the entry point of the app.
-// It connects each URL path to the right handler and starts the server.
 package main
 
 import (
@@ -8,16 +6,17 @@ import (
 )
 
 func main() {
-	// Web pages
 	http.HandleFunc("/", handlers.HomeHandler)
 	http.HandleFunc("/ascii-art", handlers.AsciiArtHandler)
 
+	// Serve CSS and JS directly from the templates directory.
+	// FileServer handles caching headers automatically.
 	http.Handle("/styles.css", http.FileServer(http.Dir("templates")))
+	http.Handle("/app.js", http.FileServer(http.Dir("templates")))
 
-	// REST API endpoints
+	// Bonus REST API
 	http.HandleFunc("/api/banners", handlers.ApiBannersHandler)
 	http.HandleFunc("/api/ascii-art", handlers.ApiAsciiArtHandler)
 
-	// Start the server on port 8080
 	http.ListenAndServe(":8080", nil)
 }

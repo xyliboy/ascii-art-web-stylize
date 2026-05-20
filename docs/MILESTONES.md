@@ -54,9 +54,9 @@ Dependencies: Milestone 5
 Acceptance Criteria: Every element follows the same visual style.
 
 ### Milestone 9: Interactive elements
-Description: Add hover and focus states to buttons, inputs, and banner selector.
+Description: Add hover and focus states to buttons, inputs, and banner selector. Implement app.js with Copy, Save Image, and Share buttons, typewriter placeholder animation, Enter-to-submit shortcut, and arrow key navigation between banners.
 Dependencies: Milestone 5
-Acceptance Criteria: The user gets visual feedback when interacting with any element.
+Acceptance Criteria: The user gets visual feedback when interacting with any element. Copy/Save/Share buttons work on the result. Keyboard navigation works across banners.
 
 ### Milestone 10: User feedback
 Description: Show the user which banner is selected and what state the form is in.

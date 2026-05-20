@@ -13,11 +13,12 @@ Single page application:
 ## UI Components
 
 1. **Header** — application title
-2. **Textarea** — input field for the user's text
-3. **Banner selector** — radio buttons for standard / shadow / thinkertoy
-4. **Submit button** — triggers POST to `/ascii-art`
+2. **Textarea** — input field for the user's text, with typewriter placeholder animation
+3. **Banner selector** — radio buttons for standard / shadow / thinkertoy, with keyboard navigation (arrow keys)
+4. **Submit button** — triggers POST to `/ascii-art`, also triggered by Enter key
 5. **Result area** — displays ASCII art output inside a `<pre>` element
 6. **Error area** — displays error messages clearly when something goes wrong
+7. **Action buttons** — Copy (clipboard), Save Image (PNG via Canvas API), Share (Web Share API)
 
 ## CSS Requirements
 
@@ -52,7 +53,8 @@ ascii-art-web-stylize/
 │       └── api_test.go      — REST API tests (bonus)
 ├── templates/
 │   ├── index.html           — main HTML page
-│   └── styles.css           — stylesheet
+│   ├── styles.css           — stylesheet
+│   └── app.js               — Copy / Save Image / Share buttons, typewriter animation, keyboard navigation
 ├── banners/
 │   ├── standard.txt         — standard banner file
 │   ├── shadow.txt           — shadow banner file

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -54,7 +54,13 @@
     {{if .Result}}
     <section class="result-section">
       <h2>Result</h2>
-      <pre>{{.Result}}</pre>
+      <pre id="ascii-output">{{.Result}}</pre>
+      <div class="result-actions">
+        <button type="button" id="btn-copy">Copy</button>
+        <button type="button" id="btn-save">Save Image</button>
+        <button type="button" id="btn-share">Share</button>
+      </div>
+      <p id="action-feedback" class="action-feedback"></p>
     </section>
     {{end}}
   </main>
@@ -62,5 +68,6 @@
   <footer>
     <p>ASCII Art Web Stylize</p>
   </footer>
+  <script src="/app.js"></script>
 </body>
 </html>

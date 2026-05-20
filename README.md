@@ -7,6 +7,8 @@ ascii-art-web-stylize is a Go web application that renders ASCII art in the brow
 ## Authors
 
 - gtzimoka
+- ebimai
+- gxylinas
 
 ## Usage: how to run
 
@@ -30,3 +32,5 @@ http://localhost:8080
 6. Render converts each character to its 8-row ASCII art block and joins them.
 7. The result is injected into the HTML template and returned to the browser.
 8. Errors return the appropriate HTTP status code (400, 404, 500) with a message shown on the page.
+9. app.js adds Copy, Save Image (PNG), and Share buttons on the result area, a typewriter animation on the textarea placeholder, Enter-to-submit, and arrow key navigation between banners.
+10. Bonus REST API: GET /api/ascii-art?text=hello&banner=standard returns JSON. GET /api/banners returns the list of available banners.
