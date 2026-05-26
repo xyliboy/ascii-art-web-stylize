@@ -18,6 +18,12 @@ type PageData struct {
 	Banner string
 }
 
+type ErrorPageData struct {
+	Code    int
+	Title   string
+	Message string
+}
+
 // renderTemplate sets the status code and renders index.html with the given data.
 // Content-Type must be set before WriteHeader — once the header is written it cannot change.
 func renderTemplate(w http.ResponseWriter, status int, data PageData) error {
@@ -33,17 +39,42 @@ func renderTemplate(w http.ResponseWriter, status int, data PageData) error {
 	return tmpl.Execute(w, data)
 }
 
+func renderErrorTemplate(w http.ResponseWriter, status int, data ErrorPageData) error {
+	tmpl, err := template.ParseFiles("templates/error.html")
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return os.ErrNotExist
+		}
+		return err
+	}
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.WriteHeader(status)
+	return tmpl.Execute(w, data)
+}
+
+func writeErrorPage(w http.ResponseWriter, status int, message string) {
+	data := ErrorPageData{
+		Code:    status,
+		Title:   http.StatusText(status),
+		Message: message,
+	}
+
+	if err := renderErrorTemplate(w, status, data); err != nil {
+		http.Error(w, message, status)
+	}
+}
+
 // HomeHandler serves GET /
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
-		http.NotFound(w, r)
+		writeErrorPage(w, http.StatusNotFound, "404 Not Found: the page you requested does not exist.")
 		return
 	}
 	if err := renderTemplate(w, http.StatusOK, PageData{}); err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			http.Error(w, "404 Not Found: template missing", http.StatusNotFound)
+			writeErrorPage(w, http.StatusNotFound, "404 Not Found: template missing.")
 		} else {
-			http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
+			writeErrorPage(w, http.StatusInternalServerError, "500 Internal Server Error: the home page could not be rendered.")
 		}
 	}
 }
@@ -66,9 +97,9 @@ func AsciiArtHandler(w http.ResponseWriter, r *http.Request) {
 	bannerMap, err := ascii.LoadBanner(banner)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			renderTemplate(w, http.StatusNotFound, PageData{Error: "404 Not Found: banner \"" + banner + "\" does not exist.", Text: text})
+			writeErrorPage(w, http.StatusNotFound, "404 Not Found: banner \""+banner+"\" does not exist.")
 		} else {
-			renderTemplate(w, http.StatusInternalServerError, PageData{Error: "500 Internal Server Error.", Text: text})
+			writeErrorPage(w, http.StatusInternalServerError, "500 Internal Server Error: the banner could not be loaded.")
 		}
 		return
 	}
@@ -83,9 +114,9 @@ func AsciiArtHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := renderTemplate(w, http.StatusOK, PageData{Result: result, Text: text, Banner: banner}); err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			http.Error(w, "404 Not Found", http.StatusNotFound)
+			writeErrorPage(w, http.StatusNotFound, "404 Not Found: template missing.")
 		} else {
-			http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
+			writeErrorPage(w, http.StatusInternalServerError, "500 Internal Server Error: the result page could not be rendered.")
 		}
 	}
 }

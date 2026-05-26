@@ -2,6 +2,7 @@ package main
 
 import (
 	"ascii-art-web-stylize/internal/handlers"
+	"fmt"
 	"net/http"
 )
 
@@ -17,6 +18,9 @@ func main() {
 	// Bonus REST API
 	http.HandleFunc("/api/banners", handlers.ApiBannersHandler)
 	http.HandleFunc("/api/ascii-art", handlers.ApiAsciiArtHandler)
+
+	fmt.Println("Open in your browser:")
+	fmt.Println("http://localhost:8080")
 
 	http.ListenAndServe(":8080", nil)
 }

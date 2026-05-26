@@ -188,6 +188,30 @@ pre {
   font-size: 0.95rem;
 }
 
+.error-page {
+  text-align: center;
+}
+
+.error-code {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.back-home {
+  display: inline-block;
+  margin-top: 18px;
+  padding: 10px 24px;
+  background-color: #222;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.back-home:hover {
+  background-color: #444;
+}
+
 textarea::-webkit-scrollbar,
 pre::-webkit-scrollbar {
   width: 8px;

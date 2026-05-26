@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{.Code}} {{.Title}} - ASCII Art Web Stylize</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header>
+    <h1>ASCII Stylize</h1>
+    <p>Turn your text into ASCII art.</p>
+  </header>
+
+  <main>
+    <section class="result-section error-page">
+      <p class="error-code">{{.Code}}</p>
+      <h2>{{.Title}}</h2>
+      <div class="error">
+        <p>{{.Message}}</p>
+      </div>
+      <a class="back-home" href="/">Back to Home</a>
+    </section>
+  </main>
+
+  <footer>
+    <p>ASCII Art Web Stylize</p>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>

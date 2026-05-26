@@ -61,6 +61,9 @@ func TestHomeHandlerNotFound(t *testing.T) {
 	if w.Code != http.StatusNotFound {
 		t.Errorf("expected 404, got %d", w.Code)
 	}
+	if !strings.Contains(w.Body.String(), "Back to Home") {
+		t.Errorf("expected custom 404 page, got %q", w.Body.String())
+	}
 }
 
 func TestAsciiArtHandlerValidInput(t *testing.T) {
@@ -81,6 +84,9 @@ func TestAsciiArtHandlerUnknownBanner(t *testing.T) {
 	w := postAsciiArt(t, "Hello", "fakebanner")
 	if w.Code != http.StatusNotFound {
 		t.Errorf("expected 404, got %d", w.Code)
+	}
+	if !strings.Contains(w.Body.String(), "banner &#34;fakebanner&#34; does not exist") {
+		t.Errorf("expected custom 404 message, got %q", w.Body.String())
 	}
 }
 
