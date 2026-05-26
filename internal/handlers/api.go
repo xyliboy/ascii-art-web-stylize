@@ -8,6 +8,7 @@ import (
 	"errors"
 	"net/http"
 	"os"
+	"strings"
 )
 
 // ApiBannersHandler returns the list of available banners as JSON.
@@ -46,6 +47,10 @@ func ApiAsciiArtHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	result := ascii.Render(text, bannerMap)
+	if strings.TrimSpace(result) == "" {
+		http.Error(w, "Bad Request", http.StatusBadRequest)
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{"result": result})

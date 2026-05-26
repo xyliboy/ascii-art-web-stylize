@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-	"net/url"
 	"strings"
 	"testing"
 )
@@ -30,10 +29,6 @@ func TestApiBannersHandler(t *testing.T) {
 }
 
 func TestApiAsciiArtHandler_ValidInput(t *testing.T) {
-	form := url.Values{}
-	form.Set("text", "Hello")
-	form.Set("banner", "standard")
-
 	req := httptest.NewRequest(http.MethodGet, "/api/ascii-art?text=Hello&banner=standard", nil)
 	w := httptest.NewRecorder()
 
@@ -50,6 +45,17 @@ func TestApiAsciiArtHandler_ValidInput(t *testing.T) {
 
 	if strings.TrimSpace(result["result"]) == "" {
 		t.Fatal("expected non-empty result")
+	}
+}
+
+func TestApiAsciiArtHandler_UnsupportedText(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/api/ascii-art?text=€€€&banner=standard", nil)
+	w := httptest.NewRecorder()
+
+	ApiAsciiArtHandler(w, req)
+
+	if w.Code != http.StatusBadRequest {
+		t.Fatalf("expected 400, got %d", w.Code)
 	}
 }
 
