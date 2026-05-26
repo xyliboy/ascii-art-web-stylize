@@ -80,3 +80,14 @@ func TestApiAsciiArtHandler_UnknownBanner(t *testing.T) {
 		t.Fatalf("expected 404, got %d", w.Code)
 	}
 }
+
+func TestApiAsciiArtHandler_PathLikeBanner(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/api/ascii-art?text=Hello&banner=../standard", nil)
+	w := httptest.NewRecorder()
+
+	ApiAsciiArtHandler(w, req)
+
+	if w.Code != http.StatusNotFound {
+		t.Fatalf("expected 404, got %d", w.Code)
+	}
+}

@@ -35,6 +35,10 @@ func ApiAsciiArtHandler(w http.ResponseWriter, r *http.Request) {
 	if banner == "" {
 		banner = "standard"
 	}
+	if !isAllowedBanner(banner) {
+		http.Error(w, "Not Found", http.StatusNotFound)
+		return
+	}
 
 	bannerMap, err := ascii.LoadBanner(banner)
 	if err != nil {

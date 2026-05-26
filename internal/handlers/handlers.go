@@ -93,6 +93,10 @@ func AsciiArtHandler(w http.ResponseWriter, r *http.Request) {
 	if banner == "" {
 		banner = "standard"
 	}
+	if !isAllowedBanner(banner) {
+		writeErrorPage(w, http.StatusNotFound, "404 Not Found: banner \""+banner+"\" does not exist.")
+		return
+	}
 
 	bannerMap, err := ascii.LoadBanner(banner)
 	if err != nil {

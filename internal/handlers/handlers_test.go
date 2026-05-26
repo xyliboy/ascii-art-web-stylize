@@ -90,6 +90,13 @@ func TestAsciiArtHandlerUnknownBanner(t *testing.T) {
 	}
 }
 
+func TestAsciiArtHandlerRejectsPathLikeBanner(t *testing.T) {
+	w := postAsciiArt(t, "Hello", "../standard")
+	if w.Code != http.StatusNotFound {
+		t.Errorf("expected 404, got %d", w.Code)
+	}
+}
+
 // --- Golden tests from docs/GOLDEN_TESTS.md ---
 
 func TestGolden1Standard(t *testing.T) {
