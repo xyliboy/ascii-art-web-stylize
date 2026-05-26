@@ -20,6 +20,7 @@ Acceptance Criteria:
 - POST /ascii-art returns 200 and displays the ASCII art result
 - POST /ascii-art returns 400 for empty or invalid input
 - POST /ascii-art returns 404 for unknown banner
+- POST /ascii-art rejects path-like or unsupported banner names
 - Returns 500 for unhandled errors
 
 ### Milestone 4: templates/index.html
@@ -82,27 +83,39 @@ Acceptance Criteria:
 - POST /ascii-art with valid input returns 200
 - POST /ascii-art with empty input returns 400
 - POST /ascii-art with unknown banner returns 404
+- POST /ascii-art with a path-like banner returns 404
+
+### Milestone 13: main_test.go
+Description: Implement smoke tests for the HTTP route setup.
+Dependencies: Milestone 3
+Acceptance Criteria:
+- GET / through the router returns 200
+- Unknown routes through the router return 404
+- POST /ascii-art through the router returns 200 for valid input
+- GET /api/banners through the router returns 200
 
 ## Bonus
 
-### Milestone 13: GET /api/ascii-art
+### Milestone 14: GET /api/ascii-art
 Description: Implement a REST API endpoint that returns ASCII art as JSON.
 Dependencies: Milestone 2
 Acceptance Criteria:
 - GET /api/ascii-art?text=hello&banner=standard returns 200 with JSON response
 - Returns 400 for empty or invalid input
 - Returns 404 for unknown banner
+- Returns 404 for path-like or unsupported banner names
 
-### Milestone 14: GET /api/banners
+### Milestone 15: GET /api/banners
 Description: Implement a REST API endpoint that returns the list of available banners as JSON.
 Dependencies: Milestone 2
 Acceptance Criteria: GET /api/banners returns 200 with JSON list of available banners.
 
-### Milestone 15: internal/handlers/api_test.go
+### Milestone 16: internal/handlers/api_test.go
 Description: Implement unit tests for the REST API endpoints.
-Dependencies: Milestone 13, Milestone 14
+Dependencies: Milestone 14, Milestone 15
 Acceptance Criteria:
 - GET /api/banners returns 200 with JSON list
 - GET /api/ascii-art with valid input returns 200 with JSON response
 - GET /api/ascii-art with empty text returns 400
 - GET /api/ascii-art with unknown banner returns 404
+- GET /api/ascii-art with a path-like banner returns 404

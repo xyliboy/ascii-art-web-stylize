@@ -31,7 +31,7 @@ Single page application:
 ## HTTP Status Codes
 
 - 200 OK — everything worked
-- 400 Bad Request — invalid input or unsupported banner
+- 400 Bad Request — empty input or input with no supported ASCII characters
 - 404 Not Found — missing template or banner file
 - 500 Internal Server Error — unhandled server error
 
@@ -40,6 +40,7 @@ Single page application:
 ```
 ascii-art-web-stylize/
 ├── main.go                  — entry point, starts HTTP server on :8080
+├── main_test.go             — route setup smoke tests
 ├── go.mod                   — module definition
 ├── README.md                — project documentation
 ├── internal/
@@ -48,11 +49,13 @@ ascii-art-web-stylize/
 │   │   └── ascii_test.go    — unit tests for ascii logic
 │   └── handlers/
 │       ├── handlers.go      — HomeHandler and AsciiArtHandler
+│       ├── banners.go       — allowed banner validation
 │       ├── handlers_test.go — handler tests
 │       ├── api.go           — REST API endpoints (bonus)
 │       └── api_test.go      — REST API tests (bonus)
 ├── templates/
 │   ├── index.html           — main HTML page
+│   ├── error.html           — custom error page
 │   ├── styles.css           — stylesheet
 │   └── app.js               — Copy / Save Image / Share buttons, typewriter animation, keyboard navigation
 ├── banners/
@@ -60,8 +63,8 @@ ascii-art-web-stylize/
 │   ├── shadow.txt           — shadow banner file
 │   └── thinkertoy.txt       — thinkertoy banner file
 └── docs/
-    ├── PRD.md               — product requirements
-    ├── milestones.md        — project milestones
+    ├── prd.md               — product requirements
+    ├── MILESTONES.md        — project milestones
     └── golden_tests.md      — expected output for audit test cases
 ```
 
@@ -75,6 +78,7 @@ Browser
 Browser
   └── POST /ascii-art (text + banner)
         └── handlers.AsciiArtHandler
+              └── validates banner name
               └── ascii.LoadBanner(banner)
                     └── reads banners/<banner>.txt
               └── ascii.Render(text, bannerMap)
